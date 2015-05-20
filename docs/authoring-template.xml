@@ -34,7 +34,7 @@
         </body>
         <note type="mapmarker"><!-- Info for the map marker here! -->
             <placeName>Le Café Américain</placeName>
-            <geo>2.333798 -48.871061</geo><!-- per geoJson: <geo>lng/x lat/y alt/z</geo>, where altitude is optional-->
+            <geo>2.333798 -48.871061</geo>
             <p>« Il allait, passant devant les cafés d’un air crâne et gaillard, et il jugeait d’un coup d’œil, à la mine, à l’habit, ce que chaque consommateur devait porter d’argent sur lui. Et une colère l’envahissait contre ces gens assis et tranquilles » (Page 24, Bel-Ami)</p>
         </note>
         <back>            

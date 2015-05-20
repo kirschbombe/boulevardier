@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title >Railroad Park (Birmingham, AL)</title>
+                <author>Nathan Day</author>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Github Pages</publisher>
+                <date when="2014">Fall 2014</date>
+            </publicationStmt>
+            <notesStmt>
+                <relatedItem><bibl>Maps and Texts project</bibl></relatedItem>
+            </notesStmt>
+            <sourceDesc><p>born digital</p></sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="article">
+                <p>Railroad Park is a 19-acre park in Birmingham, Alabama, that opened in the fall of 2010. It was designed by landscape architect Tom Leader and built by Birmingham-based Brasfield &amp; Gorrie. The park lies immediately south of the Norfolk Southern and CSX rail lines through downtown Birmingham. It stretches from 14th Street to 18th Street along First Avenue South. UAB Hospital and Children's Hospital of Alabama are several blocks south of the park. The park is a public facility owned by the City of Birmingham and managed by the non-profit Railroad Park Foundation.</p>
+                <p>Long term plans call for Railroad Park to anchor a greenway running through downtown Birmingham stretching from Railroad Park to Sloss Furnaces.</p>
+            </div>
+            <div type="bibliography">
+                <listBibl>
+                    <bibl>Content source: <ref target="https://en.wikipedia.org/wiki/Railroad_Park">https://en.wikipedia.org/wiki/Railroad_Park</ref></bibl>
+                </listBibl>
+            </div>
+        </body>
+        <note type="mapmarker">
+            <placeName>Railroad Park</placeName>
+            <geo>-86.810144 33.509492</geo>
+            <p>Railroad park is a 19-acre public park bewteen Birmingham's downtown and Southside neighborhood.</p>
+        </note>
+        <back>            
+            <div type="images">
+                <figure xml:id="fig1">
+                    <graphic url="https://upload.wikimedia.org/wikipedia/commons/9/90/Railroad_park_bham.JPG" />
+                    <head>Railroad Park seen from northwest corner</head>
+                    <note type="attribution">Image courtesy of Wikipedia</note>
+                </figure>
+            </div>
+        </back>
+    </text>
+</TEI>

@@ -1,6 +1,5 @@
-{ "map"         : { "config"    : "config/map.json",
-                    "markerDelay" : 200                 },
-  "pages"       : { "pathBase"  : "pages/",
+{ "map"         : { "config"    : "config/map.json" },
+  "pages"       : { "pathBase"  : "../../pages/",
                     "home"      : "map-title",
                     "routes" : {
                         ""              : "page",
@@ -14,7 +13,16 @@
                             , { "partial" : { "el"   : "#article"
                                             , "page" : "title.html" } }
                             , { "view"    : "views/menu"  }
-                            ],
+                        ],
+                        "contrib"  : [
+                              { "view"    : "views/issue" }
+                            , { "view"    : "views/page" }
+                            , { "view"    : "views/menu"  }
+                            , { "partial" : { "el"   : "#article"
+                                            , "page" : "title.html" } }
+                            , { "partial" : { "el"   : "#page"
+                                            , "page" : "contributors.html" } }
+                        ],
                         "404"      : [
                               { "page" : { "el"   : "body"
                                          , "page" : "404.html" } }
@@ -25,12 +33,17 @@
        "label"   : "Home",
        "href"    : "",
        "partial" : "partials/menu/page.html"     },
+
     {  "type"       : "menu",
        "label"      : "Articles",
        "collection" : "collections/articles",
        "partial"    : "partials/menu/submenu.html",
        "item": {
-            "href"  : "article/:i"              }}
+            "href"  : "article/:i"              }},
+    {  "type"    : "page",
+       "label"    : "Contributeurs",
+       "href"    : "page/contrib",
+       "partial" : "partials/menu/page.html"     }
   ],
   "persistance" : [
         { "name" : "models/article",        "persist": true, "singleton": false }
@@ -41,7 +54,9 @@
       , { "name" : "collections/markers",   "persist": true, "singleton": true  }
   ],
   "articles" : {
-    "pathBase"  : "data/articles/",
-    "files"     : []
+    "pathBase"  : "example/articles/",
+    "files"     : [
+        "railroad-park.xml"
+    ]
    }
 }
