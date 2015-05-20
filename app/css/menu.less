@@ -1,0 +1,36 @@
+
+#issue {
+    #menu {
+    
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    
+        @button-width: 40px;
+        @relief: 2px;
+        position: absolute;
+        width: @button-width;
+        left: -1*(@button-width + @relief);
+        top:  @relief; 
+        button {
+            background-color: grey;
+        }
+        span.glyphicon.glyphicon-menu-hamburger {
+            color: white;
+        }
+        .dropdown-submenu {
+            position: relative;
+            .dropdown-menu {
+                top: 0;
+                right: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+                border-radius: 0 6px 6px 6px;
+            }
+            &:hover > .dropdown-menu {
+                display: block;
+            }
+        }
+        .popover {
+            z-index: 10;
+        }
+    }
+}

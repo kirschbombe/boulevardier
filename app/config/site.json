@@ -1,0 +1,47 @@
+{ "map"         : { "config"    : "config/map.json",
+                    "markerDelay" : 200                 },
+  "pages"       : { "pathBase"  : "pages/",
+                    "home"      : "map-title",
+                    "routes" : {
+                        ""              : "page",
+                        "article/:id"   : "article",
+                        "page/:page"    : "page"
+                    },
+                    "pages"     : {
+                        "map-title" : [
+                              { "view"    : "views/map"   }
+                            , { "view"    : "views/issue" }
+                            , { "partial" : { "el"   : "#article"
+                                            , "page" : "title.html" } }
+                            , { "view"    : "views/menu"  }
+                            ],
+                        "404"      : [
+                              { "page" : { "el"   : "body"
+                                         , "page" : "404.html" } }
+                        ]
+                    }},
+  "menu"        : [
+    {  "type"    : "page",
+       "label"   : "Home",
+       "href"    : "",
+       "partial" : "partials/menu/page.html"     },
+    {  "type"       : "menu",
+       "label"      : "Articles",
+       "collection" : "collections/articles",
+       "partial"    : "partials/menu/submenu.html",
+       "item": {
+            "href"  : "article/:i"              }}
+  ],
+  "persistance" : [
+        { "name" : "models/article",        "persist": true, "singleton": false }
+      , { "name" : "models/issue",          "persist": true, "singleton": true  }
+      , { "name" : "models/map",            "persist": true, "singleton": true  }
+      , { "name" : "views/map",             "persist": true, "singleton": true  }
+      , { "name" : "collections/articles",  "persist": true, "singleton": true  }
+      , { "name" : "collections/markers",   "persist": true, "singleton": true  }
+  ],
+  "articles" : {
+    "pathBase"  : "data/articles/",
+    "files"     : []
+   }
+}
