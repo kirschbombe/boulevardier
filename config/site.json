@@ -1,4 +1,6 @@
-{ "map"         : { "config"    : "config/map.json" },
+{ "map"         : { "config"        : "config/map.json",
+                    "markerDelay"   : 200,
+                    "hoverPopup"    : false             },
   "pages"       : { "pathBase"  : "../../pages/",
                     "home"      : "map-title",
                     "routes" : {
