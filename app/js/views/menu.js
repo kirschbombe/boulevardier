@@ -70,6 +70,12 @@ define('views/menu', [
                 });
             }).done(function() {
                 that.$el.empty().append(that.template({content: content}));
+                // confirm that the menu has loaded
+                var $failDef = $.Deferred();
+                $failDef.fail(function(){
+                    that.render();
+                });
+                that.watchDOM(500, '#' + that.el.id, $failDef);
             }).fail(function() {
                 new UserErrorView({
                     model: new UserErrorModel({
