@@ -48,6 +48,10 @@ define('views/article', [
         },
         postprocess: function() {
             var that = this;
+            // adjust height of article body
+            // TODO: handle in css
+            var height = $('#article article').height() - $('#header').outerHeight(true);
+            $('#body').css({height:height});
             // add popovers to images
             var pct = _.template(popoverContentTemp);
             $('img.slidesjs-slide').each(function(i,elt) {
