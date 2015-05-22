@@ -92,6 +92,7 @@ define('views/article', [
             });
             $.when.apply({},defs).always(function(){
                 $('img.slidesjs-slide.remove').remove();
+                $('.image-loading').removeClass('image-loading');
                 // configure slidesjs; up to now, 'display:none'
                 // has applied
                 $("#slides").slidesjs({

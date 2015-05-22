@@ -117,7 +117,7 @@
 
     <xsl:template name="footer">
         <xsl:if test="count(//tei:text/tei:back/tei:div[@type='images']/tei:figure) &gt; 0">
-            <div id="article-images">
+            <div id="article-images" class="image-loading">
                 <div id="slides">
                     <xsl:apply-templates select="//tei:text/tei:back/tei:div[@type='images']/tei:figure" mode="img"/>
                 </div>
