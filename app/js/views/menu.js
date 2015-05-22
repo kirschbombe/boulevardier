@@ -10,6 +10,7 @@ define('views/menu', [
     var MenuView = Backbone.View.extend({
         template: _.template(menuTmpl),
         el: '#menu',
+        id: 'menu',
         app: null,
         init: null,
         initialize: function(opts) {
@@ -75,7 +76,7 @@ define('views/menu', [
                 $failDef.fail(function(){
                     that.render();
                 });
-                that.watchDOM(500, '#' + that.el.id, $failDef);
+                that.watchDOM(500, '#' + that.id, $failDef);
             }).fail(function() {
                 new UserErrorView({
                     model: new UserErrorModel({
