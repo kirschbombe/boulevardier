@@ -1,5 +1,4 @@
 require.config({
-  baseUrl: 'js',
   paths: {
     text:       '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min',
     jquery:     '//code.jquery.com/jquery-2.1.4.min',
