@@ -1,8 +1,4 @@
 /*global define*/
-/*
- * This is meant to be extended as an abstract base class for the
- * sections of an article.
- */
 define('views/article/geojson', [
     'jquery', 
     'underscore', 
