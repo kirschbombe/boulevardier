@@ -38,15 +38,17 @@ define('routes/router', [
             $def.done(function(){
                 _.each(pageConfig, function(pc) {
                     var viewName, args;
-                    if (_.has(pc, 'view')) {
-                        viewName = pc.view;
+                    // clone config to avoid global changes
+                    var conifg = JSON.parse(JSON.stringify(pc));
+                    if (_.has(conifg, 'view')) {
+                        viewName = conifg.view;
                         args = {};
-                    } else if (_.has(pc, 'partial')) {
+                    } else if (_.has(conifg, 'partial')) {
                         viewName = 'views/partial';
-                        pc.partial.page = that.app.config.pages.pathBase + pc.partial.page;
-                        args = pc.partial;
-                    } else if (_.has(pc, 'full')) {
-                        window.location.href =pc.full.page;
+                        conifg.partial.page = that.app.config.pages.pathBase + conifg.partial.page;
+                        args = conifg.partial;
+                    } else if (_.has(conifg, 'full')) {
+                        window.location.href = conifg.full.page;
                         return;
                     } else {
                         throw "unsupported page type: " + page;
