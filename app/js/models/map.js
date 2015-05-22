@@ -7,8 +7,10 @@ define('models/map', [
     'models/marker',
     'views/marker',
     'views/article/geojson',
-    'mixins/xml2html'
-], function($,_,Backbone,MarkersCollection,MarkerModel,MarkerView,GeoJsonView,Xml2Html,xsl) {
+    'mixins/xml2html',
+    'views/error/user',
+    'models/error/user'
+], function($,_,Backbone,MarkersCollection,MarkerModel,MarkerView,GeoJsonView,Xml2Html,UserErrorView,UserErrorModel) {
     'use strict';
     var MapModel = Backbone.Model.extend({
         app: null,
@@ -44,14 +46,7 @@ define('models/map', [
         },
         defaults: {
             "init"          : false,
-            //"mapconfigfile" : "",
-            //"articles"      : null, // ArticlesCollection
-            "mapconfig"     : {},
-            "geojson"       : {}
-        },
-        show: function(id) {
-            var col = this.get('collection');
-            col.at(id).select();
+            "mapconfig"     : {}
         },
         _makeCollection : function(articles,cbs) {
             var that = this;
@@ -72,7 +67,8 @@ define('models/map', [
                     var mm;
                     try {
                         mm = new MarkerModel({
-                            articleid: article.get('articleid'),
+                            app: that.app,
+                            articleModel: article,
                             json: (new GeoJsonView({model:article}).render())
                         });
                     // on failure to create geojson from article, warn
@@ -85,8 +81,11 @@ define('models/map', [
                         return;
                      }
                     // select event for marker model changes visible article
-                    mm.on('select', function(artid) {
-                        that.app.router.navigate('article/' + artid, {trigger: true});
+                    mm.on('active', function() {
+                        that.app.router.navigate(
+                            'article/' + mm.articleModel.get('articleid'),
+                            {trigger: true}
+                        );
                     });
                     // TODO: for Leaflet integration, the view for this
                     // marker model is passed into the map view

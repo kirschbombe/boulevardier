@@ -12,27 +12,39 @@ define('views/article', [
 ], function($,_,Backbone,DOMWatcher,XML2HTML,xsl,popoverTempl,popoverContentTemp) {
     'use strict';
     var ArticleView = Backbone.View.extend({
-        el: '#article',
+        id: 'article',
+        app: null,
+        init: null,
         initialize: function(opts) {
             var that = this;
             that.app = opts.model.app;
-            that.listenToOnce(that.model, 'active', that.render);
-            that.listenToOnce(that.model, 'inactive', that.remove);
+            that.init = opts.init;
+            that.init.resolve(that);
         },
-        render: function (params) {
+        render: function () {
             var that = this;
+            that.$el = $('#' + that.id);
             var html = this.xml2html(
                 this.model.get('xml'),
                 xsl,
                 {"article-dir": that.app.config.articles.pathBase}
             );
-            that.$el.append(html);
+            try {
+                $('#'+this.id).append(html);
+            } catch (e) {
+                console.log("article load error: " + e.toString());
+            }
             if ( $('img.slidesjs-slide').length === 0) {
                 $('#footer').remove()
                 $('article').removeClass('before-footer').addClass('no-footer');
             } else {
-                that.postprocess();
+                try {
+                    that.postprocess();
+                } catch (e) {
+                    debugger;
+                }
             }
+            return that;
         },
         postprocess: function() {
             var that = this;

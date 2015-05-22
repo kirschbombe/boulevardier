@@ -18,8 +18,6 @@ define('models/article', [
             var $get = this.fetchXML(that, that.get('path'));
             $.when($get).done(function(data) {
                 that.set('xml', data);
-                that.set('init',true);
-                that.trigger('init');
                 that.init.resolve(that);
             }).fail(function(jqXHR, textStatus, errorThrown){
                 console.log("Failed to retrieve article (" + that.get('id') + "), : " + errorThrown);

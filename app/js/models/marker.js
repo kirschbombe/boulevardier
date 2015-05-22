@@ -6,14 +6,24 @@ define('models/marker', [
 ], function($,_,Backbone) {
     'use strict';
     var MarkerModel = Backbone.Model.extend({
+        app: null,
         defaults: {
-            "articleid" : 0,
+            "articleModel" : null,
             "view"      : null,
-            "json"      : {},
-            "selected"  : false
+            "json"      : {}
         },
-        select: function() {
-            this.trigger('select', this.get('articleid'));
+        initialize: function(opts) {
+            var that = this;
+            that.app = opts.app;
+            that.articleModel = opts.articleModel;
+            that.app.fetch('models/issue').done(function(issue) {
+                that.on('active', function() {
+                    issue.trigger('select', that.get('articleModel'));
+                });
+                that.articleModel.on('active', function(){
+                    that.trigger('active')
+                });
+            });
         }
     });    
     return MarkerModel;

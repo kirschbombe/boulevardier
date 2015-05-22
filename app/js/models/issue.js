@@ -31,9 +31,13 @@ define('models/issue', [
                     articledir: artdir,
                     path:       artdir + file
                 };
-                that.app.fetch('models/article', args).done(function(article){
-                    articles[i] = article;
-                    $def.resolve(article);
+                that.app.fetch('models/article', args).done(function(articleModel){
+                    articles[i] = articleModel;
+                    that.app.fetch('views/article', {model:articleModel}).done(function(articleView) {
+                        articleModel.on('active',articleView.render,articleView);
+                        articleModel.on('inactive',articleView.remove,articleView);
+                    });
+                    $def.resolve();
                 }).fail(function(){
                     $def.fail();
                 });
@@ -41,6 +45,9 @@ define('models/issue', [
             $.when.apply({},deferreds).done(function() {
                 col.add(articles);
                 col.trigger('complete');
+                that.on('select', function(article) {
+                    that._selectArticle(article);
+                });
                 _.each(deferreds, function($def){
                     $def.done(function(article){
                         col.add(article);
@@ -54,29 +61,35 @@ define('models/issue', [
         defaults: {
             "articlefile" : "",
             "articledir"  : "",
-            "collection"  : []
+            "collection"  : [],
+            "activeArticle" : null
         },
         // show an article and the corresponding pin
-        show: function(id) {
+        _selectArticle: function(article) {
             var that = this;
             var col = that.get('collection');
-            if (col.length > id ) {
-                if (!col.at(id).get('active')) {
-                    _.forEach(col.where({active:true}), function(article) {
-                        article.unselect();
-                    });
-                    // this involves async initialization
-                    var article = col.at(id);
-                    article.init.done(function(){
-                        article.select();
-                        that.app.fetch('models/map').done(function(map) {
-                            map.show(id);
-                        });
-                    });
-                }
+            var art;
+            if (typeof article === 'object') {
+                art = article;
+            } else if (typeof article === 'number' || typeof article === 'string') {
+                art = col.at(article);
             } else {
-                this.app.router.navigate("page/404", {trigger:true});
+                throw "Bad argument to models/issue";
             }
+            if ((this.get('activeArticle') !== null) &&
+                (this.get('activeArticle') == article))
+            {
+                return;
+            } else {
+                that.set('activeArticle', art);
+            }
+            _.forEach(col.models, function(article) {
+                article.trigger('inactive');
+            });
+            // this involves async initialization
+            art.init.done(function() {
+                art.trigger('active');
+            });
         }
     });
     return IssueModel;

@@ -6,7 +6,7 @@ define('routes/router', [
     'models/error/user',
     'views/error/user'
 ], function($,_,Backbone,UserErrorModel,UserErrorView) {
-    'use strict';
+    //'use strict';
     var Router = Backbone.Router.extend({
         app     : null,
         pages   : {},   // config for supported pages
@@ -14,6 +14,10 @@ define('routes/router', [
             this.app = opts.app;
             this.pages = this.app.config.pages;
             Backbone.history.start();
+        },
+        navigate: function(fragment,options){
+            if (Backbone.history.fragment === fragment) return;
+            Backbone.history.navigate(fragment,options);
         },
         page: function(page) {
             var that = this;
@@ -23,7 +27,7 @@ define('routes/router', [
                 pageConfig = this.pages.pages[page];
                 if (pageConfig === undefined) throw "missing config";
             } catch (e) {
-                this.page('404');
+                return this.page('404');
             }
             // do an automatic clear of body for any pages
             var $def = $.Deferred();
@@ -41,10 +45,9 @@ define('routes/router', [
                         viewName = 'views/partial';
                         pc.partial.page = that.app.config.pages.pathBase + pc.partial.page;
                         args = pc.partial;
-                    } else if (_.has(pc, 'page')) {
-                        viewName = 'views/page';
-                        pc.page = that.app.config.pages.pathBase + pc.page;
-                        args = pc.page;
+                    } else if (_.has(pc, 'full')) {
+                        window.location.href =pc.full.page;
+                        return;
                     } else {
                         throw "unsupported page type: " + page;
                     }
@@ -55,6 +58,7 @@ define('routes/router', [
             });
         },
         article : function(id) {
+            $('#titlepage').remove();
             var that = this;
             var deferreds = [];
             _.each(["views/issue", "views/map", "views/menu"], function(viewName) {
@@ -67,7 +71,7 @@ define('routes/router', [
             });
             $.when.apply({},deferreds).done(function() {
                 that.app.fetch('models/issue').done(function(issue) {
-                    issue.show(id);
+                    issue.trigger('select', id);
                 });
             }).fail(function() {
                 console.log("Failed to display article: " + id);

@@ -64,14 +64,15 @@ define('views/map', [
                             // were already open
                             mapMarker.removeEventListener('click');
                             mapMarker.on('click', function() {
-                                markerModel.select();
+                                markerModel.trigger('active');
                             });
                             mapMarker.on('mouseover', function(){
+                                if (!that.app.config.map.hoverPopup) return;
                                 if (openpopup[popupid(mapMarker.getLatLng())]) return;
                                 mapMarker.openPopup();
                             });
                             // application object, not leafletjs
-                            markerModel.on('select', function(artid) {
+                            markerModel.on('active', function(artid) {
                                 if (openpopup[popupid(mapMarker.getLatLng())]) return;
                                 mapMarker.openPopup();
                             });
