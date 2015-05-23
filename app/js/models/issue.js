@@ -18,7 +18,7 @@ define('models/issue', [
             var files = that.app.config.articles.files;
             // TODO: fix this and models/app construction of collections
             var $colDef = that.app.singletons['collections/articles'];
-            var col = new ArticleCollection(null, {model: ArticleModel, app: that.app, init: $colDef});
+            var col = new ArticleCollection({model: ArticleModel, init: $colDef});
             that.set('collection', col);
             var deferreds = [];
             // articles constructed sync, so article objects added to list by index
@@ -61,7 +61,6 @@ define('models/issue', [
         defaults: {
             "articlefile" : "",
             "articledir"  : "",
-            "collection"  : [],
             "activeArticle" : null
         },
         // show an article and the corresponding pin

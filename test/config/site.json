@@ -8,6 +8,7 @@
                         "article/:id"   : "article",
                         "page/:page"    : "page"
                     },
+                    "router" : { "history" : false      },
                     "pages"     : {
                           "test" : []
                         , "map-title" : [
@@ -34,14 +35,13 @@
        "item": {
             "href"  : "article/:i"              }}
   ],
-  "persistance" : [
-        { "name" : "models/article",        "persist": true, "singleton": false }
-      , { "name" : "models/issue",          "persist": true, "singleton": true  }
+  "persistance" : {
+    "lazy"      : true,
+    "classes"   : [
+        { "name" : "models/issue",          "persist": true, "singleton": true  }
       , { "name" : "models/map",            "persist": true, "singleton": true  }
       , { "name" : "views/map",             "persist": true, "singleton": true  }
-      , { "name" : "collections/articles",  "persist": true, "singleton": true  }
-      , { "name" : "collections/markers",   "persist": true, "singleton": true  }
-  ],
+  ]},
   "articles" : {
     "pathBase"  : "data/articles/",
     "files"     : []

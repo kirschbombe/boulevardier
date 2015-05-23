@@ -43,6 +43,27 @@
   ],
   "articles" : {
     "pathBase"  : "data/articles/",
-    "files"     : []
+    "files"     : [
+        "Asnières-sur-Seine.xml",
+        "Le Théâtre Marigny.xml",
+        "Le Bois du Vésinet.xml",
+        "Le Bois de Boulogne.xml",
+        "L'Église de la Trinité.xml",
+        "Théâtre du Vaudeville.xml",
+        "Le Boulevard Malesherbes.xml",
+        "Le Café Américain.xml",
+        "Bougival.xml",
+        "Le Parc Monceau.xml",
+        "Le Café Riche.xml",
+        "La Gare Saint-Lazare.xml",
+        "La Rue Fontaine.xml",
+        "Les Folies-Bergère.xml",
+        "Eglise de la Madeleine.xml",
+        "La Rue de Verneuil.xml",
+        "Chatou.xml",
+        "L'Avenue du Bois de Boulogne.xml",
+        "Le Boulevard Poissonnière.xml",
+        "La Gare des Batignolles.xml"
+      ]
    }
 }

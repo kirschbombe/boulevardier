@@ -52,7 +52,7 @@ define('models/map', [
             var that = this;
             // TODO: fix this, along with models/issue
             var $colDef = that.app.singletons['collections/markers'];
-            var col = new MarkersCollection(null, {model: MarkerModel, app: that.app, init: $colDef});
+            var col = new MarkersCollection({model: MarkerModel, init: $colDef});
             that.set('collection', col);
             // article initialization has an async call to fatch an article
             // file, so we need to initialize each marker in this map model's

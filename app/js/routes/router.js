@@ -10,10 +10,13 @@ define('routes/router', [
     var Router = Backbone.Router.extend({
         app     : null,
         pages   : {},   // config for supported pages
+        config  : {},
         initialize: function(opts) {
             this.app = opts.app;
+            this.config = opts.config;
             this.pages = this.app.config.pages;
-            Backbone.history.start();
+            // pages.router.history = true by default, if missing
+            if (_.has(this.config,'history') && !!this.config.history) Backbone.history.start();
         },
         navigate: function(fragment,options){
             if (Backbone.history.fragment === fragment) return;

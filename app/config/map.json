@@ -18,20 +18,20 @@
         "zoomControl" : true
     },
     "tileLayer" : {
-        "url" : "",
+        "url" : "https://{s}.tiles.mapbox.com/v3/kirschbombe.l007nm13/{z}/{x}/{y}.png",
         "opts" : {
             "minZoom" : 0,
             "maxZoom" : 15,
-            "errorTileUrl" : "",
-            "attribution" : "",
-            "subdomains" : [],
+            "errorTileUrl" : "img/error-tile-image.png",
+            "attribution" : "<a href=\"http://www.mapbox.com\">Mapbox</a>", 
+            "subdomains" : ["a", "b", "c", "d"],
             "detectRetina" : true
         }
     },
     "view" : {
-        "lat": 0,
-        "lng" : 0,
-        "zoom": 1
+        "lat": 48.87,
+        "lng" : 2.385,
+        "zoom": 12
     },
     "scale" : {
         "position" : "bottomleft",
@@ -53,7 +53,7 @@
             "autoPanPadding" : [5, 5]
         },
         "icon" : {
-            "iconUrl" : "icons/noun_5091_cc.svg",
+            "iconUrl" : "app/icons/noun_5091_cc.svg",
             "iconSize" : [32, 37],
             "iconAnchor" : [17, 36],
             "popupAnchor" : [-1, -32],
