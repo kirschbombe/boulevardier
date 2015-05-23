@@ -51,7 +51,7 @@ define('models/map', [
         _makeCollection : function(articles,cbs) {
             var that = this;
             // TODO: fix this, along with models/issue
-            var $colDef = that.app.singletons['collections/articles'];
+            var $colDef = that.app.singletons['collections/markers'];
             var col = new MarkersCollection(null, {model: MarkerModel, app: that.app, init: $colDef});
             that.set('collection', col);
             // article initialization has an async call to fatch an article
