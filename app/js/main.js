@@ -35,13 +35,26 @@ require([
     'models/error/user',
     'views/error/user',
     'models/app',
+    'views/app',
     'bootstrap'
-], function($,UserErrorModel,UserErrorView,AppModel) {
+], function($,UserErrorModel,UserErrorView,AppModel,AppView) {
     'use strict';
     var configfile = $('#main').attr('data-config');
     if (configfile) {
         $.getJSON(configfile, function(siteconfig) {
-            var app = new AppModel({config: siteconfig});
+            try {
+                var app = new AppView({
+                    model: (new AppModel({config: siteconfig}))
+                });
+            } catch (e) {
+                if (!opts.config.debug) {
+                    new UserErrorView({
+                        model: new UserErrorModel({
+                            msg: e.toString()
+                        })
+                    });
+                }
+            }
         }).fail(function(jqxhr, textStatus, error) {
             new UserErrorView({
                 model: new UserErrorModel({

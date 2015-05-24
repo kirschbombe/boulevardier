@@ -6,6 +6,9 @@ define('models/error/user', [
     var UserErrorModel = Backbone.Model.extend({
         defaults: {
             "msg" : ""
+        },
+        initialize: function(args) {
+            throw new Error(args.message);
         }
     });    
     return UserErrorModel;

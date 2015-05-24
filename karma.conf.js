@@ -17,6 +17,8 @@ module.exports = function(config) {
         {pattern: 'test/lib/jquery/dist/jquery.js'  , included:  true}
       , {pattern: 'test/**/*.js'                    , included: false}
       , {pattern: 'test/**/*.json'                  , included: false}
+      , {pattern: 'test/fixtures/**/*.*'            , included: false}
+
       , {pattern: 'app/js/**/*.js'                  , included: false}
       , {pattern: 'app/partials/**/*.html'          , included: false}
       , {pattern: 'app/pages/**/*.html'             , included: false}
@@ -53,8 +55,10 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Firefox', 'PhantomJS'],
-    //browsers: ['PhantomJS'],
+    //browsers: ['Chrome'],
+    browsers: ['Chrome', 'Firefox'],
+    // phantomjs does not support xslt
+    //browsers: ['Chrome', 'Firefox', 'PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

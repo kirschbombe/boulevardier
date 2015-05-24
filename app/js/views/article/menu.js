@@ -14,14 +14,12 @@ define('views/article/menu', [
     var ArticleMenuView = Backbone.View.extend({
         render: function(params) {
             var that = this;
-            var xslDoc = new DOMParser().parseFromString(amXsl,'text/xml');
             // this view is meant to be called only after the corresponding
             // article model has been initialized
-            if (this.model.init.state() !== 'resolved') {
+            if (this.model.init().state() !== 'resolved') {
                 throw "Uninitialized article in ArticleMenuView";
             }
-//debugger;
-            var menuitem = that.xml2html(that.model.get('xml'), xslDoc, params);
+            var menuitem = that.xml2html(that.model.get('xml'), amXsl, params);
             return menuitem;
         }
     });

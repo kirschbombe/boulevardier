@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Asnières-sur-Seine</title>
+            <author>Willa Silverman</author>
+         </titleStmt>
+         <publicationStmt>
+            <publisher>Penn State University</publisher>
+            <date when="2012">Fall 2012</date>
+         </publicationStmt>
+         <notesStmt>
+            <relatedItem>
+               <bibl>
+                  <author>Maupassant's</author>
+                  <title>Bel-Ami</title>
+               </bibl>
+            </relatedItem>
+         </notesStmt>
+         <sourceDesc>
+            <p>born digital</p>
+         </sourceDesc>
+      </fileDesc>
+   </teiHeader>
+   <text>
+      <body>
+         <div type="article">
+            <q>“Quand ils passèrent le pont d’Asnières, une gaieté les saisit à la vue de la rivière couverte de bateaux, de pêcheurs et de canotiers. Le soleil, un puissant soleil de mai, répandit sa lumière oblique sur lse embarcations et sur le fleuve calme qui semblait immobile, sans courant et sans remous, figé sous la chaleur et la clarté du jour finisant. Une barque à voile, au milieu de la rivière, ayant tendu sur ses deux bords deux grand triangles de toile blanche pour cueillir les moindres douffles de brise, avait l’air d’un énorme oiseau prêt à s’envoler.” (Livre II, ch. 1, p. 185)
+            </q>
+            <p>Relié à Paris dès 1837 par une ligne de chemin de fer, Asnières devient, dans la deuxième moitié du dix-neuvième siècle, un lieu de détente et de loisirs pour des parisiens, attires par les restaurants, fêtes et surtout – étant donnée la situation d’Asnières sur la Seine – par les régates et le canotage.Comptant 19,575 habitants en 1891, Asnières attire également des artistes tells Van Gogh, Emile Bernard, Paul Signac et Georges Seurat.</p>
+            <p>Cependant, la ville ne cesse pas de s’industrialiser au détriment de l’agriculture, comptant une dizaine de nouvelles industries dans la deuximèe moitié du dix-neuvième siècle, y compris une manufacture d’articles de voyage de Louis Vuitton. En 1911, la population s’élève à 42.583 habitants, témoignant d’une augmentation très rapide (et aussi tardive) en plusieurs décennies seulement.</p>  
+         </div>
+      </body>
+      <note>
+         <note type="mapmarker">
+            <placeName>Asnières-sur-Seine</placeName>
+            <geo>2.285369 48.914155</geo>
+            <p>“Quand ils passèrent le pont d’Asnières, une gaieté les saisit à la vue de la rivière couverte de bateaux, de pêcheurs et de canotiers. Le soleil, un puissant soleil de mai, répandit sa lumière oblique sur lse embarcations et sur le fleuve calme qui semblait immobile, sans courant et sans remous, figé sous la chaleur et la clarté du jour finisant. Une barque à voile, au milieu de la rivière, ayant tendu sur ses deux bords deux grand triangles de toile blanche pour cueillir les moindres douffles de brise, avait l’air d’un énorme oiseau prêt à s’envoler.”</p>
+         </note>
+      </note>
+      <back>
+         <div type="images">
+            <figure xml:id="fig1">
+               <graphic url="../images/vanGogh_pont.png"/>
+               <head>La Seine avec le Pont de Clichy, van Gogh</head>
+               <note type="attribution">Image courtesy of the van Gogh Gallery </note>
+               <figDesc>Painting of a bridge over the Seine</figDesc>
+            </figure>
+            <figure xml:id="fig2">
+               <graphic url="../images/Photo_vanGogh.png"/>
+               <head>Emile Bernard et Vincent Van Gogh (de dos) sur les berges de la Seine</head>
+               <note type="attribution">Image courtesy of Jeditoo.com</note>
+               <figDesc>Black and white photograph of Emile Bernard and van Gogh sitting on the bank of the Seine</figDesc>
+            </figure>
+            <figure xml:id="fig3">
+               <graphic url="../images/Monet.png"/>
+               <head>La Seine à Asnières, Monet</head>
+               <note type="attribution">Image courtesy of WIkimedia</note>
+               <figDesc>Impressionist painting of boats in the pier on the Seine</figDesc>
+            </figure>
+            <figure xml:id="fig4">
+               <graphic url="../images/Renoir.png"/>
+               <head>Barques sur la Seine à Asnières </head>
+               <note type="attribution">Image courtesy of Wikipaintings</note>
+               <figDesc>Impressionist painting of two women in a small boat on the river</figDesc>
+            </figure>
+            <figure xml:id="fig5">
+               <graphic url="../images/CartePostale.png"/>
+               <head>Équipe du Rowing Club</head>
+               <note type="attribution">Image courtesy of Aloj</note>
+               <figDesc>Black and white postcard of a rowing team beneath a bridge</figDesc>
+            </figure>
+            <figure xml:id="fig6">
+               <graphic url="../images/vanGogh_Road.png"/>
+               <head>Walk along the banks of the Seine at Asnieres</head>
+               <note type="attribution">Image courtesy of Wikimedia</note>
+               <figDesc>Impressionist painting of people walking along the bank of the river</figDesc>
+            </figure>
+            <figure xml:id="fig7">
+               <graphic url="../images/vanGogh_Fishing.png"/>
+               <head>Fishing in Spring, the Pont de Clichy (Asnières), 1887</head>
+               <note type="attribution"/>
+               <figDesc>Impressionist painting of a man fishing in a boat on the river</figDesc>
+            </figure>
+            <figure xml:id="fig8">
+               <graphic url="../images/vanGogh.png"/>
+               <head>Le restaurant de la Sirène à Asnières, summer 1887</head>
+               <note type="attribution">Image courtesy of Impressionistsgallery.co.uk</note>
+               <figDesc>Impressionist painting of a restaurant façade in Asnière </figDesc>
+            </figure>
+            <figure xml:id="fig9">
+               <graphic url="../images/Seurat2.png"/>
+               <head>Bathers at Asnières, Georges Seurat, 1884</head>
+               <note type="attribution">Image courtesy of Wikimedia</note>
+               <figDesc>Pointillist painting of people lounging on the banks of the river and swimming</figDesc>
+            </figure>
+            <figure xml:id="fig10">
+               <graphic url="../images/009_001.jpg"/>
+               <head>ASNIERES Berges de la Seine en amont du pont du chemin de fer</head>
+               <note type="attribution">Image courtesy of Delcampe</note>
+               <figDesc>Sepia postcard of Parisians walking along the Seine</figDesc>
+            </figure>
+         </div>
+      </back>
+   </text>
+</TEI>

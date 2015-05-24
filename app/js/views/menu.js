@@ -1,45 +1,40 @@
 /*global define*/
 define('views/menu', [
-    'jquery',
-    'underscore',
-    'backbone',
-    'text!partials/menu.html',
-    'mixins/domwatcher'
-], function($,_,Backbone,menuTmpl,DOMWatcher) {
+      'jquery'
+    , 'underscore'
+    , 'backbone'
+    , 'text!partials/menu.html'
+    , 'mixins/domwatcher'
+    , 'views/article/menu'
+], function($,_,Backbone,menuTmpl,DOMWatcher,ArticleMenuView) {
     'use strict';
     var MenuView = Backbone.View.extend({
         template: _.template(menuTmpl),
-        el: '#menu',
-        id: 'menu',
-        app: null,
-        init: null,
-        initialize: function(opts) {
-            var that = this;
-            that.app = opts.app;
-            that.init = opts.init;
-            that.app.fetch('models/menu', {items:that.app.config.menu}).done(function(menu) {
-                that.model = menu;
-                that.init.resolve(that);
-            });
+          id:      'menu'
+        , tagName: 'div'
+        , issue:   null
+        , config:  {}
+        , initialize: function(args) {
+            this.config = args.config;
+            this.issue  = args.issue;
         },
         render: function() {
             var that = this;
-            var items = this.model.get('items');
+            var items = this.config.menu;
             // render each item from the config file to a <li>
             // must be done async due to retrieval of partial files
             var promises = [];
              // cache of template strings: url => templ
             var templates = {};
             var collections = {};
-            _.each(items, function(item){ 
+            _.each(items, function(item){
                 templates[item.partial] = '';
                 if (item.type === 'menu') {
-                    var $colDef = $.Deferred();
-                    that.app.fetch(item.collection).done(function(col) {
-                        collections[item.collection] = col;
-                        $colDef.resolve();
-                    });
-                    promises.push($colDef.promise());
+                    if ( item.collection === "collections/articles") {
+                        collections[item.collection] = that.issue.get('collection');
+                    } else {
+                        throw new Error("Unhandled collection type requested: " + item.collection);
+                    }
                 }
             });
             _.each(_.keys(templates), function(url) {
@@ -60,8 +55,17 @@ define('views/menu', [
                     } else if (item.type === 'menu') {
                         var subContent = '';
                         collections[item.collection].models.forEach(function(model,j) {
-                            var href = item.item.href.replace(':i', j);
-                            subContent += model.menulabel({href: '#' + href});
+                            var href    = item.item.href.replace(':i', j);
+                            var amv     = new ArticleMenuView({model:model});
+                            var result  = amv.render({href: '#' + href});
+                            // need an <li> element here
+                            if (result.nodeName === 'BODY') {
+                                subContent += result.innerHTML;
+                            } else if (result.nodeName === 'LI') {
+                                subContent += result.outerHTML;
+                            } else {
+                                throw new Error('Unsupported document element for submenu: ' + result.documentElement);
+                            }
                         });
                         content += (templates[url])({
                             label: item.label,
@@ -69,8 +73,9 @@ define('views/menu', [
                         });
                     }
                 });
-            }).done(function() {
-                that.$el.empty().append(that.template({content: content}));
+            }).then(function() {
+                $('#' + that.id).width(40);
+                $('#' + that.id).empty().append(that.template({content: content}));
                 // confirm that the menu has loaded
                 var $failDef = $.Deferred();
                 $failDef.fail(function(){
@@ -78,11 +83,7 @@ define('views/menu', [
                 });
                 that.watchDOM(500, '#' + that.id, $failDef);
             }).fail(function() {
-                new UserErrorView({
-                    model: new UserErrorModel({
-                        msg: "Failed to build menu."
-                    })
-                });
+                throw new Error("Failed to build menu.");
             });
         }
     });

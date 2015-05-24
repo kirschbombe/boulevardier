@@ -13,13 +13,9 @@ define('views/article', [
     'use strict';
     var ArticleView = Backbone.View.extend({
         id: 'article',
-        app: null,
-        init: null,
-        initialize: function(opts) {
+        initialize: function(args) {
             var that = this;
-            that.app = opts.model.app;
-            that.init = opts.init;
-            that.init.resolve(that);
+            that.config = args.config;
         },
         render: function () {
             var that = this;
@@ -27,10 +23,11 @@ define('views/article', [
             var html = this.xml2html(
                 this.model.get('xml'),
                 xsl,
-                {"article-dir": that.app.config.articles.pathBase}
+                {"article-dir": that.config.articles.pathBase}
             );
             try {
-                $('#'+this.id).append(html);
+                $('.article-content').remove();
+                $('#'+this.id).append(html.innerHTML);
             } catch (e) {
                 console.log("article load error: " + e.toString());
             }
@@ -41,7 +38,7 @@ define('views/article', [
                 try {
                     that.postprocess();
                 } catch (e) {
-                    debugger;
+                    throw new Error("Failed to handle article images");
                 }
             }
             return that;
@@ -82,8 +79,7 @@ define('views/article', [
                     $def.resolve();
                 });
                 $(img).error(function(){
-                    // allow time before all the deferreds fail --
-                    // this is just to simplify debugger path errors
+                    // allow some time before failure
                     window.setTimeout(function(){
                         $def.reject();
                     },500);

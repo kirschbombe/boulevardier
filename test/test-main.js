@@ -6,17 +6,18 @@ var pathToModule = function(path) {
 };
 
 var paths = {
-      'jquery'     : 'test/lib/jquery/jquery'
-    , 'underscore' : 'test/lib/underscore/underscore'
-    , 'backbone'   : 'test/lib/backbone/backbone'
-    , 'bootstrap'  : 'test/lib/bootstrap/dist/js/bootstrap'
-    , 'text'       : 'test/lib/requirejs-text/text'
-    , 'leaflet'    : 'test/lib/leaflet/dist/leaflet'
-    , 'slidesjs'   : 'test/lib/Slides-SlidesJS-3/source/jquery.slides'
-    , 'partials'   : 'app/partials'
-    , 'config'     : 'test/config'
-    , 'xsl'        : 'app/script/xsl'
-    , 'pages'      : 'app/pages'
+      'jquery'      : 'test/lib/jquery/jquery'
+    , 'underscore'  : 'test/lib/underscore/underscore'
+    , 'backbone'    : 'test/lib/backbone/backbone'
+    , 'bootstrap'   : 'test/lib/bootstrap/dist/js/bootstrap'
+    , 'text'        : 'test/lib/requirejs-text/text'
+    , 'leaflet'     : 'test/lib/leaflet/dist/leaflet'
+    , 'slidesjs'    : 'test/lib/Slides-SlidesJS-3/source/jquery.slides'
+    , 'partials'    : 'app/partials'
+    , 'config'      : 'test/config'
+    , 'xsl'         : 'app/script/xsl'
+    , 'pages'       : 'app/pages'
+    , 'fixtures'    : 'test/fixtures'
 };
 
 // 'collections/markers'   : 'app/js/collections/markers',

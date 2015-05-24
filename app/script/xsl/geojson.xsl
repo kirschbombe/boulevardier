@@ -4,7 +4,7 @@
     xmlns:tei="http://www.tei-c.org/ns/1.0" 
     exclude-result-prefixes="tei"
     version="1.0">
-    <xsl:output method="html"/>
+    <xsl:output method="text"/>
     <xsl:template match="/">
         <div>
             <xsl:apply-templates select="//tei:note[@type='mapmarker']"/>

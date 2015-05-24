@@ -9,14 +9,6 @@ define('views/page', [
     'use strict';
     var PageView = Backbone.View.extend({
         el: 'body',
-        app: null,
-        init: null,
-        initialize: function(opts) {
-            var that = this;
-            that.app = opts.app;
-            that.init = opts.init;
-            that.init.resolve(that);
-        },
         render: function () {
             var that = this;
             var $def = $.Deferred();
