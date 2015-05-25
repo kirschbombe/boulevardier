@@ -5,7 +5,7 @@
     exclude-result-prefixes="tei"
     version="1.0">
 
-    <xsl:output method="html"/>
+    <xsl:output method="html" encoding="UTF-8"/>
     <xsl:param name="href"/>
 
     <xsl:template match="/">

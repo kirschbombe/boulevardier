@@ -1,0 +1,25 @@
+{
+  "name": "mapsandtexts",
+  "version": "0.1.0",
+  "homepage": "https://github.com/rnathanday/mapsandtexts",
+  "authors": [
+    "Nathan Day <rnathanday@yahoo.com>"
+  ],
+  "description": "literary cartography front-end application",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "~2.1.4",
+    "underscore": "~1.8.3",
+    "requirejs": "~2.1.17"
+  }
+}

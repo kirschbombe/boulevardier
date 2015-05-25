@@ -6,17 +6,16 @@ define('models/marker', [
 ], function($,_,Backbone) {
     'use strict';
     var MarkerModel = Backbone.Model.extend({
-        app: null,
         defaults: {
-            "articleModel" : null,
-            "view"      : null,
-            "json"      : {}
+            "articleModel"  : null,
+            "view"          : null,
+            "json"          : {}
         },
-        initialize: function(opts) {
+        initialize: function(args) {
             var that = this;
-            that.app = opts.app;
-            that.articleModel = opts.articleModel;
-            that.app.fetch('models/issue').done(function(issue) {
+            that.app = args.app;
+            that.articleModel = args.articleModel;
+            args.issue.init().done(function(issue) {
                 that.on('active', function() {
                     issue.trigger('select', that.get('articleModel'));
                 });

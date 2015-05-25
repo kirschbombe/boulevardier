@@ -8,6 +8,7 @@
                         "article/:id"   : "article",
                         "page/:page"    : "page"
                     },
+                    "router" : { "history" : true       },
                     "pages"     : {
                         "map-title" : [
                               { "view"    : "views/map"   }
@@ -33,16 +34,29 @@
        "item": {
             "href"  : "article/:i"              }}
   ],
-  "persistance" : [
-        { "name" : "models/article",        "persist": true, "singleton": false }
-      , { "name" : "models/issue",          "persist": true, "singleton": true  }
-      , { "name" : "models/map",            "persist": true, "singleton": true  }
-      , { "name" : "views/map",             "persist": true, "singleton": true  }
-      , { "name" : "collections/articles",  "persist": true, "singleton": true  }
-      , { "name" : "collections/markers",   "persist": true, "singleton": true  }
-  ],
   "articles" : {
     "pathBase"  : "data/articles/",
-    "files"     : []
+    "files"     : [
+        "Asnières-sur-Seine.xml",
+        "Le Théâtre Marigny.xml",
+        "Le Bois du Vésinet.xml",
+        "Le Bois de Boulogne.xml",
+        "L'Église de la Trinité.xml",
+        "Théâtre du Vaudeville.xml",
+        "Le Boulevard Malesherbes.xml",
+        "Le Café Américain.xml",
+        "Bougival.xml",
+        "Le Parc Monceau.xml",
+        "Le Café Riche.xml",
+        "La Gare Saint-Lazare.xml",
+        "La Rue Fontaine.xml",
+        "Les Folies-Bergère.xml",
+        "Eglise de la Madeleine.xml",
+        "La Rue de Verneuil.xml",
+        "Chatou.xml",
+        "L'Avenue du Bois de Boulogne.xml",
+        "Le Boulevard Poissonnière.xml",
+        "La Gare des Batignolles.xml"
+      ]
    }
 }

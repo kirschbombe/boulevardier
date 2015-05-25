@@ -6,9 +6,7 @@
     version="1.0">
     <xsl:output method="html"/>
     <xsl:template match="/">
-        <div>
-            <xsl:apply-templates select="//tei:note[@type='mapmarker']"/>
-        </div>
+        <xsl:apply-templates select="//tei:note[@type='mapmarker']"/>
     </xsl:template>
     
     <xsl:template match="tei:note[@type='mapmarker']">

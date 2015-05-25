@@ -1,47 +1,40 @@
 /*global define */
 define('models/map', [
-    'jquery',
-    'underscore',
-    'backbone',
-    'collections/markers',
-    'models/marker',
-    'views/marker',
-    'views/article/geojson',
-    'mixins/xml2html',
-    'views/error/user',
-    'models/error/user'
-], function($,_,Backbone,MarkersCollection,MarkerModel,MarkerView,GeoJsonView,Xml2Html,UserErrorView,UserErrorModel) {
+      'jquery'
+    , 'underscore'
+    , 'backbone'
+    , 'collections/markers'
+    , 'models/marker'
+    , 'views/article/geojson'
+    , 'views/error/user'
+    , 'models/error/user'
+    , 'mixins/asyncInit'
+], function($,_,Backbone,MarkersCollection,MarkerModel,GeoJsonView,UserErrorView,UserErrorModel,AsyncInit) {
     'use strict';
     var MapModel = Backbone.Model.extend({
-        app: null,
-        init: null,
-        initialize: function(opts) {
-            var that = this;
-            that.app = opts.app;
-            that.init = opts.init;
-            // wait for the issue to be completely initialized
-            var $m1 = that.app.fetch('models/issue');
-            var artCol;
-            var $m2 = $.Deferred();
-            that.app.fetch('models/issue').done(function(issue) {
-                that.app.fetch('collections/articles').done(function(col) {
-                    artCol = col;
-                    $m2.resolve();
-                });
-            });
-            var $m3 = $.getJSON(that.app.config.map.config, function(data) {
+        initialize: function(args) {
+            var that    = this;
+            that.$def   = $.Deferred();
+            that.issue  = args.issue;
+            if (that.issue === undefined) throw new Error('Missing issue model in map model');
+            that.set('router', args.router);
+            if (!args.router) throw new Error('No router in MapModel');
+            var $configDef = $.Deferred();
+            $.getJSON(args.config.map.config, function(data) {
                 that.set('mapconfig', data);
+                $configDef.resolve();
             }).fail(function(jqxhr, textStatus, error) {
+                $configDef.fail();
                 console.log('Failed to load map config file: ' + error);
             });
-            $.when($m1,$m2,$m3).done(function() {
-                that._makeCollection(artCol, {
-                    success: function() { that.init.resolve(that); },
-                    fail:    function() { that.init.fail();        }
+            $.when.apply({},[that.issue.init(), $configDef]).done(function() {
+                that._makeCollection(that.issue.get('collection').models, {
+                    success: function() { that.$def.resolve(that); },
+                    fail:    function() { that.$def.fail();        }
                 });
             }).fail(function(jqxhr, textStatus, error) {
                 console.log("Failed to init MapModel: " + error);
-                $def.fail();
+                that.$def.fail();
             });
         },
         defaults: {
@@ -50,60 +43,55 @@ define('models/map', [
         },
         _makeCollection : function(articles,cbs) {
             var that = this;
-            // TODO: fix this, along with models/issue
-            var $colDef = that.app.singletons['collections/markers'];
-            var col = new MarkersCollection(null, {model: MarkerModel, app: that.app, init: $colDef});
-            that.set('collection', col);
-            // article initialization has an async call to fatch an article
-            // file, so we need to initialize each marker in this map model's
-            // collection in a deferred object that waits for its article
-            // to be initialized
             var deferreds = [];
-            articles.forEach(function(article) {
-                var artid = article.get('articleid');
+            var col = new MarkersCollection();
+            that.set('collection', col);
+            var markers = _.map(_.range(articles.length), function(){return undefined;});
+            var error = false;
+            var errorMsg = '';
+            articles.forEach(function(article,i){
                 var $artDef = $.Deferred();
                 deferreds.push($artDef);
-                article.init.done(function() {
+                article.init().done(function() {
                     var mm;
                     try {
                         mm = new MarkerModel({
-                            app: that.app,
-                            articleModel: article,
-                            json: (new GeoJsonView({model:article}).render())
+                              issue       : that.issue
+                            , articleModel: article
+                            , json        : (new GeoJsonView({model:article}).render())
                         });
                     // on failure to create geojson from article, warn
                     // but do not block map
                     } catch (e) {
-                        new UserErrorView({
-                            model: new UserErrorModel({msg: e.toString()})
-                        });
+                        error = true;
+                        errorMsg += ("\n" + e.toString());
                         $artDef.resolve();
                         return;
                      }
                     // select event for marker model changes visible article
                     mm.on('active', function() {
-                        that.app.router.navigate(
-                            'article/' + mm.articleModel.get('articleid'),
+                        that.get('router').navigate(
+                            'article/' + article.get('articleid'),
                             {trigger: true}
                         );
                     });
-                    // TODO: for Leaflet integration, the view for this
-                    // marker model is passed into the map view
-                    // can do better?
-                    var mv = new MarkerView({model: mm});
-                    mm.set('view', mv);
-                    col.add(mm);
+                    markers[i] = mm;
                     $artDef.resolve();
                 });
             });
             $.when.apply({},deferreds).done(function() {
-                col.trigger('complete');
+                col.add(markers);
+                if (error) {
+                    new UserErrorView({
+                        model: new UserErrorModel({msg: errorMsg})
+                    });
+                }
                 cbs.success();
             }).fail(function() {
                 cbs.fail();
             });
         }
     });
-    _.extend(MapModel.prototype,Xml2Html);
+    _.extend(MapModel.prototype,AsyncInit);
     return MapModel;
 });
