@@ -3,11 +3,9 @@ define('models/app', [
     'jquery',
     'underscore',
     'backbone',
-    'models/error/user',
-    'views/error/user',
     'routes/router',
     'models/issue'
-], function($,_,Backbone,UserErrorModel,UserErrorView,Router,IssueModel) {
+], function($,_,Backbone,Router,IssueModel) {
     'use strict';
     var AppModel = Backbone.Model.extend({
         initialize: function(opts) {

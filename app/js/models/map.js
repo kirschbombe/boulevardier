@@ -5,11 +5,8 @@ define('models/map', [
     , 'backbone'
     , 'collections/markers'
     , 'models/marker'
-    , 'views/article/geojson'
-    , 'views/error/user'
-    , 'models/error/user'
     , 'mixins/asyncInit'
-], function($,_,Backbone,MarkersCollection,MarkerModel,GeoJsonView,UserErrorView,UserErrorModel,AsyncInit) {
+], function($,_,Backbone,MarkersCollection,MarkerModel,AsyncInit) {
     'use strict';
     var MapModel = Backbone.Model.extend({
         initialize: function(args) {
@@ -58,7 +55,7 @@ define('models/map', [
                         mm = new MarkerModel({
                               issue       : that.issue
                             , articleModel: article
-                            , json        : (new GeoJsonView({model:article}).render())
+                            , json        : article.geojson()
                         });
                     // on failure to create geojson from article, warn
                     // but do not block map
@@ -81,11 +78,7 @@ define('models/map', [
             });
             $.when.apply({},deferreds).done(function() {
                 col.add(markers);
-                if (error) {
-                    new UserErrorView({
-                        model: new UserErrorModel({msg: errorMsg})
-                    });
-                }
+                if (error) throw new Error(errorMsg);
                 cbs.success();
             }).fail(function() {
                 cbs.fail();

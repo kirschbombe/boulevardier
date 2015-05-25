@@ -1,13 +1,13 @@
 /*global define */
 define('models/article', [
-    'jquery',
-    'underscore',
-    'backbone',
-    'views/article',
-    'mixins/fetchxml',
-    'mixins/asyncInit',
-    'views/article/menu'
-], function($,_,Backbone,ArticleView,FetchXML,AsyncInit,ArticleMenuView) {
+      'jquery'
+    , 'underscore'
+    , 'backbone'
+    , 'mixins/fetchxml'
+    , 'mixins/asyncInit'
+    , 'mixins/xml2html'
+    , 'text!xsl/geojson.xsl'
+], function($,_,Backbone,FetchXML,AsyncInit,XML2HTML,geoJsonXsl) {
     'use strict';
     var ArticleModel = Backbone.Model.extend({
         initialize: function() {
@@ -33,9 +33,21 @@ define('models/article', [
         },
         unselect: function() {
             this.trigger('inactive');
+        },
+        geojson: function() {
+            var geojson = '{}';
+            try {
+                var xml = this.get('xml');
+                var jsonString = this.xml2html(xml, geoJsonXsl, {}, 'text');
+                geojson = JSON.parse(jsonString);
+            } catch (e) {
+                throw new Error("Failed to parse to json: " + e.toString());
+            }
+            return geojson;
         }
     });
     _.extend(ArticleModel.prototype,FetchXML);
     _.extend(ArticleModel.prototype,AsyncInit);
+    _.extend(ArticleModel.prototype,XML2HTML);
     return ArticleModel;
 });
