@@ -20,6 +20,7 @@ define('views/menu', [
         },
         render: function() {
             var that = this;
+            if ($('#' + that.id).children().length !== 0) return;
             var items = this.config.menu;
             // render each item from the config file to a <li>
             // must be done async due to retrieval of partial files
@@ -59,12 +60,18 @@ define('views/menu', [
                             var amv     = new ArticleMenuView({model:model});
                             var result  = amv.render({href: '#' + href});
                             // need an <li> element here
-                            if (result.nodeName === 'BODY') {
-                                subContent += result.innerHTML;
-                            } else if (result.nodeName === 'LI') {
-                                subContent += result.outerHTML;
+                            if (typeof result === 'string') {
+                                subContent += result;
+                            } else if (result instanceof Element) {
+                                if (result.nodeName === 'BODY') {
+                                    subContent += result.innerHTML;
+                                } else if (result.nodeName === 'LI') {
+                                    subContent += result.outerHTML;
+                                } else {
+                                    throw new Error('Unsupported document element for submenu: ' + result.toString());
+                                }
                             } else {
-                                throw new Error('Unsupported document element for submenu: ' + result.documentElement);
+                                throw new Error('Unsupported result type for submenu: ' + result.toString());
                             }
                         });
                         content += (templates[url])({
@@ -74,7 +81,6 @@ define('views/menu', [
                     }
                 });
             }).then(function() {
-                $('#' + that.id).width(40);
                 $('#' + that.id).empty().append(that.template({content: content}));
                 // confirm that the menu has loaded
                 var $failDef = $.Deferred();

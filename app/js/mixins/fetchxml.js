@@ -8,7 +8,7 @@ define('mixins/fetchxml', [
         // when successful, the Promise returns the data fetched
         // by the ajax request
         // data returned by the promise is a Document
-        fetchXML : function(that, url) {
+        fetchXML : function(url) {
             var $get = $.ajax({
                 type:       'GET',
                 url:        url,
@@ -20,7 +20,7 @@ define('mixins/fetchxml', [
                     console.log('Failed to fetch XML at url "' + url +'": ' + errorThrown);
                 }
             });
-            return $get;
+            return $get.promise();
         }
     };
     return FetchXML;

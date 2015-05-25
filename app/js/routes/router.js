@@ -78,12 +78,18 @@ define('routes/router', [
                 , issue:  that.issue
                 , router: that
             };
-            var isv = new IssueView(args);
-            isv.render();
-            var mpv = new MapView(args);
-            mpv.render();
-            var mnv = new MenuView(args);
-            mnv.render();
+            if ($('#issue').length === 0) {
+                var isv = new IssueView(args);
+                isv.render();
+            }
+            if ($('#map').length === 0) {
+                var mpv = new MapView(args);
+                mpv.render();
+            }
+            if ($('#menu').children().length === 0) {
+                var mnv = new MenuView(args);
+                mnv.render();
+            }
             that.issue.trigger('select', id);
         }
     });

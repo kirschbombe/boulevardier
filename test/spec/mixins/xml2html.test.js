@@ -10,36 +10,33 @@ define([
     , 'text!xsl/geojson.xsl'
     , 'mixins/xml2html'
     , 'underscore'
-], function (in1,in1am,in1a,in1g,amXsl,aXsl,gXsl,XML2HTML,_) {
+    , 'utils'
+], function (in1,in1am,in1a,in1g,amXsl,aXsl,gXsl,XML2HTML,_,utils) {
   'use strict';
-  
-  describe("[Testing collections/articles constructor & init]:", function () {
+  describe("[Testing mixins/xml2html]:", function () {
       it('expect xml2html to raise exception on invalid input object',function(){
         expect(function() { XML2HTML.xml2html([], ""); }).to.throw('Unrecognized document input in XML2HTML');
       });
       it('expect xml2html to raise exception on unparsable XML string',function(){
-        expect(function() { XML2HTML.xml2html("a", ""); }).to.throw('Failed to parse document in xml2html');
+        expect(function() { XML2HTML.xml2html("<a", ""); }).to.throw('Failed to parse document in xml2html');
       });
       it('expect article-menu.xsl to output correct result',function(){
         var result = XML2HTML.xml2html(in1, amXsl, {'href':'#'});
-        expect(result).to.equal(in1am);
-      });      
-      it('expect article.xsl to output correct result',function(){
-        var result = XML2HTML.xml2html(in1, aXsl);
-        
-console.log('---------------------');
-console.log(result);
-console.log('---------------------');
-
-        expect(result).to.equal(in1a);
+        var in1amDoc = new DOMParser().parseFromString(in1am,'text/xml').documentElement;
+        expect(result.documentElement == in1amDoc.documentElement).to.equal(true);
       });
-/*
-      it('expect geojson.xsl to output correct result',function(){
+      it('expect article.xsl to output correct result',function(){
+        var orig    = new DOMParser().parseFromString(in1a,'text/xml').documentElement;
+        var result  = new DOMParser().parseFromString(XML2HTML.xml2html(in1, aXsl),'text/xml').documentElement;
+        expect(utils.diff(orig,result)).to.equal(false);       
+      });
+      it('expect geojson.xsl to output correct result',function() {
+
         var result = XML2HTML.xml2html(in1, gXsl, null, 'text');
-        expect(_.equal(
+        expect(_.isEqual(
             JSON.parse(result),
             JSON.parse(in1g)
-        )).to.be(true);
+        )).to.equal(true);
       });
-*/  });
+  });
 });

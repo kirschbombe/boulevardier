@@ -17,7 +17,9 @@ define('views/article/geojson', [
             }
             var geojson;
             try {
-                geojson = JSON.parse(that.xml2html(that.model.get('xml'), geoJsonXsl, {}, 'text'));
+                var xml = that.model.get('xml');
+                var jsonString = that.xml2html(xml, geoJsonXsl, {}, 'text');
+                geojson = JSON.parse(jsonString);
             } catch (e) {
                 console.log('Failed to parse to json: ' + e.toString());
                 throw new Error("Failed to parse to json: " + e.toString());

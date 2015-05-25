@@ -16,6 +16,7 @@ define('models/map', [
             var that    = this;
             that.$def   = $.Deferred();
             that.issue  = args.issue;
+            if (that.issue === undefined) throw new Error('Missing issue model in map model');
             that.set('router', args.router);
             if (!args.router) throw new Error('No router in MapModel');
             var $configDef = $.Deferred();

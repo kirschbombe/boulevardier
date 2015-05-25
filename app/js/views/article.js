@@ -27,7 +27,7 @@ define('views/article', [
             );
             try {
                 $('.article-content').remove();
-                $('#'+this.id).append(html.innerHTML);
+                $('#'+this.id).append(html);
             } catch (e) {
                 console.log("article load error: " + e.toString());
             }
@@ -43,6 +43,7 @@ define('views/article', [
             }
             return that;
         },
+        remove: function() { /* retain */},
         postprocess: function() {
             var that = this;
             // adjust height of article body

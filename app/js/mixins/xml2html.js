@@ -9,12 +9,12 @@ define('mixins/xml2html', [
             var xmlDoc;
             if (typeof xml === 'string') {
                 xmlDoc = new DOMParser().parseFromString(xml,'text/xml');
-            } else if (typeof xml === 'object') {
+            } else if (xml instanceof Document) {
                 xmlDoc = xml;
             } else {
                 throw new Error("Unrecognized document input in XML2HTML");
             }
-            if (xmlDoc.getElementsByTagName('parsererror').length > 0) {
+            if (xmlDoc == null || (!xmlDoc.hasOwnProperty('getElementsByTagName') && xmlDoc.getElementsByTagName('parsererror').length > 0)) {
                 throw new Error("Failed to parse document in xml2html");
             }
             return xmlDoc;
@@ -35,18 +35,22 @@ define('mixins/xml2html', [
                 var doc = xsltProcessor.transformToDocument(xmlDoc);
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
                     //<transformiix:result>...</transformiix:result>
-                    result = doc.documentElement;
+                    if (mode === 'text') {
+                        result = doc.documentElement.textContent;
+                    } else {
+                        result = doc.documentElement;
+                    }
                 } else {
-                    result = doc.body;
+                    if (mode === 'text') {
+                        result = doc.documentElement.textContent;
+                    } else {
+                        result = result = doc.body.innerHTML;
+                    }
                 }
             } catch (e) {
                 throw new Error('Error in XSLT transform: ' + e.toString());
             }
-            if (mode === 'text') {
-                return result.textContent;
-            } else {
-                return result;
-            }
+            return result;
         }
     };
     return XML2HTML;

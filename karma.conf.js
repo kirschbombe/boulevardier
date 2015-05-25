@@ -17,7 +17,7 @@ module.exports = function(config) {
         {pattern: 'test/lib/jquery/dist/jquery.js'  , included:  true}
       , {pattern: 'test/**/*.js'                    , included: false}
       , {pattern: 'test/**/*.json'                  , included: false}
-      , {pattern: 'test/fixtures/**/*.*'            , included: false}
+      , {pattern: 'test/fixtures/**/*.*'            , included: false, watched: true, served: true}
 
       , {pattern: 'app/js/**/*.js'                  , included: false}
       , {pattern: 'app/partials/**/*.html'          , included: false}
@@ -41,6 +41,7 @@ module.exports = function(config) {
     reporters: ['progress'],
 
     // web server port
+    hostname: 'localhost',
     port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
@@ -56,9 +57,9 @@ module.exports = function(config) {
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     //browsers: ['Chrome'],
-    browsers: ['Chrome', 'Firefox'],
-    // phantomjs does not support xslt
-    //browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+    //browsers: ['Firefox'],
+    //browsers: ['Chrome', 'Safari'],
+    browsers: ['Chrome', 'Firefox', 'Safari'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

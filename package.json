@@ -23,6 +23,7 @@
     "karma-firefox-launcher": "^0.1.6",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-chai": "^0.1.0",
-    "chai": "^2.3.0"
+    "chai": "^2.3.0",
+    "karma-safari-launcher": "^0.1.1"
   }
 }

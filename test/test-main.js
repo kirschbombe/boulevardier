@@ -18,6 +18,7 @@ var paths = {
     , 'xsl'         : 'app/script/xsl'
     , 'pages'       : 'app/pages'
     , 'fixtures'    : 'test/fixtures'
+    , 'utils'       : 'test/lib/utils'
 };
 
 // 'collections/markers'   : 'app/js/collections/markers',

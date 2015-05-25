@@ -13,7 +13,7 @@ define('models/article', [
         initialize: function() {
             var that = this;
             that.$def = $.Deferred();
-            var $get = that.fetchXML(that, that.get('path'));
+            var $get = that.fetchXML(that.get('path'));
             $.when($get).done(function(data) {
                 that.set('xml', data);
                 that.$def.resolve(that);
