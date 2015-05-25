@@ -6,8 +6,7 @@ define('models/issue', [
     , 'models/article'
     , 'collections/articles'
     , 'mixins/asyncInit'
-    , 'views/article'
-], function($,_,Backbone,ArticleModel,ArticleCollection,AsyncInit,ArticleView) {
+], function($,_,Backbone,ArticleModel,ArticleCollection,AsyncInit) {
     'use strict';
     var IssueModel = Backbone.Model.extend({
         initialize: function(args) {
@@ -70,16 +69,7 @@ define('models/issue', [
             }
             // this involves async initialization
             art.init().done(function() {
-                // TODO: review whether this is the best place to create a new
-                // view for an article
-                var av = new ArticleView({
-                      model: art
-                    , config: that.config
-                    , issue:  that
-                    , router: that.router
-                });
-                art.on('active',   av.render, av);
-                art.on('inactive', av.remove, av);
+                that.trigger('update', art);
                 art.select();
             });
         }
