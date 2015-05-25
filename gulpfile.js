@@ -5,7 +5,6 @@ var mincss      = require('gulp-minify-css');
 var concat      = require('gulp-concat');
 var uglify      = require('gulp-uglify');
 var del         = require('del');
-var compress    = require('gulp-yuicompressor');
 var livereload  = require('gulp-livereload');
 
 // jshint
