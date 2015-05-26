@@ -64,10 +64,9 @@ module.exports = function(config) {
     // launch Chrome using CHROME_BIN on Travis-CI
     customLaunchers: {
       Chrome_travis : {
-        base: 'Chrome',
+          base: 'Chrome',
           flags: ['--no-sandbox']
         }
-      }
     },
 
     // Continuous Integration mode
@@ -75,7 +74,7 @@ module.exports = function(config) {
     singleRun: false
   });
 
-  if(process.env.TRAVIS){
+  if(process.env.TRAVIS) {
     config.browsers = ['Firefox', 'Chrome_travis'];
   }
 };
