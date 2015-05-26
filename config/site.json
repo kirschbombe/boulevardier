@@ -8,6 +8,7 @@
                         "article/:id"   : "article",
                         "page/:page"    : "page"
                     },
+                    "router" : { "history" : true       },
                     "pages"     : {
                         "map-title" : [
                               { "view"    : "views/map"   }
@@ -46,14 +47,6 @@
        "label"    : "Contributeurs",
        "href"    : "page/contrib",
        "partial" : "partials/menu/page.html"     }
-  ],
-  "persistance" : [
-        { "name" : "models/article",        "persist": true, "singleton": false }
-      , { "name" : "models/issue",          "persist": true, "singleton": true  }
-      , { "name" : "models/map",            "persist": true, "singleton": true  }
-      , { "name" : "views/map",             "persist": true, "singleton": true  }
-      , { "name" : "collections/articles",  "persist": true, "singleton": true  }
-      , { "name" : "collections/markers",   "persist": true, "singleton": true  }
   ],
   "articles" : {
     "pathBase"  : "example/articles/",
