@@ -56,8 +56,8 @@ define('views/article', [
                 var id = elt.getAttribute('id');
                 var $po = $('.popover.' + id).remove();
                 var title = $po.find('.head').text();
+                $(elt).attr('alt', $po.find('.desc').text());
                 var content = pct({
-                    desc: $po.find('.desc').text(),
                     attr: $po.find('.attr').text()
                 });
                 $(elt).popover({

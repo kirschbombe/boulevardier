@@ -16,6 +16,7 @@ define('views/map', [
             var that = this;
             that.config = args.config;
             that.model = new MapModel(args);
+            that.router = args.router;
         }
         , render: function () {
             var that = this;
@@ -72,8 +73,8 @@ define('views/map', [
         , addMarkerToMap: function(markerModel,map,openpopup,popupid,mapconfig) {
             var that        = this;
             var geojson     = markerModel.get('json');
-            var markerView  = new MarkerView({model: markerModel});
-            markerModel.set('view', markerView);
+            var markerView  = new MarkerView({model: markerModel, router: that.router});
+            markerView.render();
             L.geoJson(geojson, {
                 // feature is the geojson, a raw JS object
                 // mapMarker is

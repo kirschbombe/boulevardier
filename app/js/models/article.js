@@ -17,9 +17,8 @@ define('models/article', [
             $.when($get).done(function(data) {
                 that.set('xml', data);
                 that.$def.resolve(that);
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                console.log("Failed to retrieve article (" + that.get('id') + "), : " + errorThrown);
-                that.$def.fail();
+            }).fail(function() {
+                that.$def.reject();
             });
         },
         defaults: {

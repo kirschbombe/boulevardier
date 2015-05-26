@@ -1,21 +1,33 @@
 /*global define */
 define('routes/router', [
-    'jquery',
-    'underscore',
-    'backbone',
-    'models/error/user',
-    'views/error/user'
-], function($,_,Backbone,UserErrorModel,UserErrorView) {
+      'jquery'
+    , 'underscore'
+    , 'backbone'
+    , 'models/error/user'
+    , 'views/error/user'
+    , 'views/clear'
+    , 'views/issue'
+    , 'views/map'
+    , 'views/menu'
+], function($,_,Backbone,UserErrorModel,UserErrorView,ClearView,IssueView,MapView,MenuView) {
     //'use strict';
     var Router = Backbone.Router.extend({
-        app     : null,
         pages   : {},   // config for supported pages
+        config  : {},   // global site configuration, i.e., site.json
+        issue   : null, // IssueModel for this app
         initialize: function(opts) {
-            this.app = opts.app;
-            this.pages = this.app.config.pages;
-            Backbone.history.start();
+            var that    = this;
+            this.config = opts.config;
+            this.pages  = opts.config.pages;
+            this.issue  = opts.issue;
+            this.issue.init().done(function() {
+                // pages.router.history = true by default, if missing
+                if (_.has(that.pages.router,'history') && !!that.pages.router.history) {
+                    Backbone.history.start();
+                }
+            });
         },
-        navigate: function(fragment,options){
+        navigate: function(fragment,options) {
             if (Backbone.history.fragment === fragment) return;
             Backbone.history.navigate(fragment,options);
         },
@@ -25,59 +37,60 @@ define('routes/router', [
             try {
                 if (!page) page = this.pages.home;
                 pageConfig = this.pages.pages[page];
-                if (pageConfig === undefined) throw "missing config";
+                if (pageConfig === undefined) throw new Error('Missing config in router/page');
             } catch (e) {
                 return this.page('404');
             }
-            // do an automatic clear of body for any pages
-            var $def = $.Deferred();
-            that.app.fetch('views/clear').done(function(view) {
-                view.render();
-                $def.resolve();
-            });
-            $def.done(function(){
-                _.each(pageConfig, function(pc) {
-                    var viewName, args;
-                    // clone config to avoid global changes
-                    var conifg = JSON.parse(JSON.stringify(pc));
-                    if (_.has(conifg, 'view')) {
-                        viewName = conifg.view;
-                        args = {};
-                    } else if (_.has(conifg, 'partial')) {
-                        viewName = 'views/partial';
-                        conifg.partial.page = that.app.config.pages.pathBase + conifg.partial.page;
-                        args = conifg.partial;
-                    } else if (_.has(conifg, 'full')) {
-                        window.location.href = conifg.full.page;
-                        return;
-                    } else {
-                        throw "unsupported page type: " + page;
-                    }
-                    that.app.fetch(viewName, args).done(function(view) {
-                        view.render();
-                    });
+            // clear the <body>
+            (new ClearView()).render();
+            _.each(pageConfig, function(pc) {
+                var viewName;
+                var args = {
+                      config: that.config
+                    , issue:  that.issue
+                    , router: that
+                };
+                // clone config to avoid global changes
+                var conifg = JSON.parse(JSON.stringify(pc));
+                if (_.has(conifg, 'view')) {
+                    viewName = conifg.view;
+                } else if (_.has(conifg, 'partial')) {
+                    viewName = 'views/partial';
+                    conifg.partial.page = that.pages.pathBase + conifg.partial.page;
+                    args = _.extend(args,conifg.partial);
+                } else if (_.has(conifg, 'full')) {
+                    window.location.href = conifg.full.page;
+                    return;
+                } else {
+                    throw new Error('Unsupported page type in router: ' + page);
+                }
+                require([viewName], function(View) {
+                    var v = new View(args);
+                    v.render();
                 });
             });
         },
         article : function(id) {
             $('#titlepage').remove();
             var that = this;
-            var deferreds = [];
-            _.each(["views/issue", "views/map", "views/menu"], function(viewName) {
-                var $def = $.Deferred();
-                deferreds.push($def);
-                that.app.fetch(viewName).done(function(view) {
-                    view.render();
-                    $def.resolve();
-                });
-            });
-            $.when.apply({},deferreds).done(function() {
-                that.app.fetch('models/issue').done(function(issue) {
-                    issue.trigger('select', id);
-                });
-            }).fail(function() {
-                console.log("Failed to display article: " + id);
-            });
+            var args = {
+                  config: that.config
+                , issue:  that.issue
+                , router: that
+            };
+            if ($('#issue').length === 0) {
+                var isv = new IssueView(args);
+                isv.render();
+            }
+            if ($('#map').length === 0) {
+                var mpv = new MapView(args);
+                mpv.render();
+            }
+            if ($('#menu').children().length === 0) {
+                var mnv = new MenuView(args);
+                mnv.render();
+            }
+            that.issue.trigger('select', id);
         }
     });
     return Router;

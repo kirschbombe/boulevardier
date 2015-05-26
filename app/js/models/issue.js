@@ -13,11 +13,11 @@ define('models/issue', [
             var that    = this;
             that.$def   = $.Deferred();
             var artdir  = args.config.articles.pathBase;
+            if (!artdir.match(/\/$/)) artdir += '/';
             var files   = args.config.articles.files;
             var col     = new ArticleCollection();
             that.config = args.config;
             that.set('collection', col);
-            var inits = [];
             // fix length of articles array
             var articles = _.map(_.range(files.length), function(){return undefined;});
             // articles constructed sync, so article objects added to list by index
@@ -27,17 +27,26 @@ define('models/issue', [
                     articledir: artdir,
                     path:       artdir + file
                 });
-                inits.push(articles[i].init());
             });
-            $.when.apply({},inits).done(function() {
+
+            var inits = _.map(articles, function(article){return article.init();});
+            // NOTE: .fail() is not called; failure is handled in .always()
+            $.when({},inits).fail(function() {
+                that.$def.reject();
+            });
+            $.when.apply(null,inits).done(function() {
                 col.add(articles);
-                col.trigger('complete');
                 that.on('select', function(article) {
                     that._selectArticle(article);
                 });
                 that.$def.resolve(that);
-            }).fail(function() {
-                that.$def.fail();
+            });
+            $.when.apply(null,inits).always(function() {
+                _.forEach(inits, function($promise){
+                    if ($promise.state() === 'rejected')
+                        that.$def.reject();
+                });
+                that.$def.resolve(that);
             });
         },
         defaults: {

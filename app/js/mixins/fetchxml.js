@@ -1,6 +1,6 @@
 /*global define */
 define('mixins/fetchxml', [
-    'jquery' 
+    'jquery'
 ], function($) {
     'use strict';
     var FetchXML = {
@@ -9,15 +9,16 @@ define('mixins/fetchxml', [
         // by the ajax request
         // data returned by the promise is a Document
         fetchXML : function(url) {
-            var $get = $.ajax({
-                type:       'GET',
-                url:        url,
-                dataType:   'xml',
+            var $get = $.Deferred();
+            $.ajax({
+                type:     'GET',
+                url:      url,
+                dataType: 'xml',
                 success: function(data) {
-                     return data;
+                     $get.resolve(data);
                 },
-                fail: function(jqXHR, textStatus, errorThrown) {
-                    console.log('Failed to fetch XML at url "' + url +'": ' + errorThrown);
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $get.reject();
                 }
             });
             return $get.promise();

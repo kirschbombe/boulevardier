@@ -21,21 +21,23 @@ define('models/map', [
                 that.set('mapconfig', data);
                 $configDef.resolve();
             }).fail(function(jqxhr, textStatus, error) {
-                $configDef.fail();
+                $configDef.reject();
                 console.log('Failed to load map config file: ' + error);
             });
             $.when.apply({},[that.issue.init(), $configDef]).done(function() {
                 that._makeCollection(that.issue.get('collection').models, {
                     success: function() { that.$def.resolve(that); },
-                    fail:    function() { that.$def.fail();        }
+                    fail:    function() { that.$def.reject();      }
                 });
-            }).fail(function(jqxhr, textStatus, error) {
-                console.log("Failed to init MapModel: " + error);
-                that.$def.fail();
+            // TODO: issue as to whether fail()/always() is called on failure here;
+            // fail() should be called on falure
+            }).fail(function() {
+                that.$def.reject();
+            }).always(function(){
+                that.$def.reject();
             });
         },
         defaults: {
-            "init"          : false,
             "mapconfig"     : {}
         },
         _makeCollection : function(articles,cbs) {
@@ -53,9 +55,10 @@ define('models/map', [
                     var mm;
                     try {
                         mm = new MarkerModel({
-                              issue       : that.issue
-                            , articleModel: article
-                            , json        : article.geojson()
+                              issue     : that.issue
+                            , article   : article
+                            , json      : article.geojson()
+                            , router    : that.router
                         });
                     // on failure to create geojson from article, warn
                     // but do not block map
@@ -65,13 +68,6 @@ define('models/map', [
                         $artDef.resolve();
                         return;
                      }
-                    // select event for marker model changes visible article
-                    mm.on('active', function() {
-                        that.get('router').navigate(
-                            'article/' + article.get('articleid'),
-                            {trigger: true}
-                        );
-                    });
                     markers[i] = mm;
                     $artDef.resolve();
                 });
