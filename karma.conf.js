@@ -59,7 +59,7 @@ module.exports = function(config) {
     //browsers: ['Chrome'],
     //browsers: ['Firefox'],
     //browsers: ['Chrome', 'Safari'],
-    //browsers: ['Chrome', 'Firefox', 'Safari'],
+    browsers: ['Chrome', 'Firefox', 'Safari'],
 
     // launch Chrome using CHROME_BIN on Travis-CI
     customLaunchers: {
