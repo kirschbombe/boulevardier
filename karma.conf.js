@@ -55,13 +55,27 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+    // NOTE: PhantomJS does not support browser-native XSLT
     //browsers: ['Chrome'],
-    browsers: ['Firefox'],
+    //browsers: ['Firefox'],
     //browsers: ['Chrome', 'Safari'],
     //browsers: ['Chrome', 'Firefox', 'Safari'],
+
+    // launch Chrome using CHROME_BIN on Travis-CI
+    customLaunchers: {
+      Chrome_travis : {
+        base: 'Chrome',
+          flags: ['--no-sandbox']
+        }
+      }
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: false
   });
+
+  if(process.env.TRAVIS){
+    config.browsers = ['Firefox', 'Chrome_travis'];
+  }
 };
