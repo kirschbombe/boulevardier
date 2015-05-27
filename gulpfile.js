@@ -31,10 +31,10 @@ gulp.task('js', function() {
         .pipe(gulp.dest('./dist/js'));
 });
 
-// copy dirs recursively
-var dirs = ['config', 'data', 'icons', 'img', 'script', 'css/fonts', 'partials', 'pages'];
+// copy dirs recursively (not app/css or app/js)
+var dirs = ['icons', 'img', 'script', 'partials', 'pages'];
 gulp.task('copy', function() {
-    gulp.src(['./app/*'])
+    gulp.src(['./app/*.*'])
     .pipe(gulp.dest('./dist'));
     dirs.forEach(function(dir){
         gulp.src(['./app/' + dir + '/**/*'])
