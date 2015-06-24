@@ -6,6 +6,7 @@ var concat      = require('gulp-concat');
 var uglify      = require('gulp-uglify');
 var del         = require('del');
 var livereload  = require('gulp-livereload');
+var sourcemaps  = require('gulp-sourcemaps');
 
 // jshint
 gulp.task('jshint', function(){
@@ -26,9 +27,18 @@ gulp.task('css', function(){
 // TODO: minify, source maps
 gulp.task('js', function() {
     gulp.src(['./app/js/*/**/*.js', './app/js/main.js'])
-        .pipe(uglify())    
+        .pipe(uglify())
         .pipe(concat('main.js'))
         .pipe(gulp.dest('./dist/js'));
+});
+
+gulp.task('js-sm', function() {
+    return gulp.src(['./app/js/*/**/*.js', './app/js/main.js'])
+		.pipe(sourcemaps.init())
+			.pipe(uglify())
+			.pipe(concat('main.js'))
+		.pipe(sourcemaps.write())
+		.pipe(gulp.dest('dist/js'));
 });
 
 // copy dirs recursively (not app/css or app/js)
@@ -65,5 +75,5 @@ gulp.task('clean', function(cb) {
 
 // build
 gulp.task('build', function() {
-    gulp.start('clean', 'css', 'js', 'copy');
+    gulp.start('clean', 'css', 'js-sm', 'copy');
 });

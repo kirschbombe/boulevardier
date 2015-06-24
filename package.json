@@ -28,7 +28,8 @@
     "gulp-minify-css": "1.1.1",
     "gulp-livereload": "3.8.0",
     "bower": "1.4.1",
-    "requirejs": "2.1.17"
+    "requirejs": "2.1.17",
+    "gulp-sourcemaps": "1.5.2"
   },
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run --browsers Firefox"
