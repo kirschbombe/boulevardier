@@ -53,6 +53,7 @@ define('views/menu', [
                     var url = item.partial;
                     var sorter = {};
                     var subContent = '';
+                    var sortKeys = [];
                     if (item.type === 'page' || item.type === 'sep') {
                         content += (templates[url])(item);
                     } else if (item.type === 'menu') {
@@ -81,7 +82,11 @@ define('views/menu', [
                                 sorter[$li.find('a').text()] = $li.clone();
                             }
                         });
-                        _.each(_.sortBy(_.keys(sorter), function(key){return key;}), function(key){
+                        sortKeys = _.keys(sorter);
+                        sortKeys.sort(function(a,b) {
+                            return a.localeCompare(b);
+                        });
+                        _.each(sortKeys, function(key){
                             subContent += sorter[key][0].outerHTML;
                         });
                         content += (templates[url])({
