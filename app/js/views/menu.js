@@ -51,28 +51,38 @@ define('views/menu', [
             $.when.apply($, promises).done(function() {
                 _.forEach(items, function(item,i) {
                     var url = item.partial;
+                    var sorter = {};
+                    var subContent = '';
                     if (item.type === 'page' || item.type === 'sep') {
                         content += (templates[url])(item);
                     } else if (item.type === 'menu') {
-                        var subContent = '';
                         collections[item.collection].models.forEach(function(model,j) {
                             var href    = item.item.href.replace(':i', j);
                             var amv     = new ArticleMenuView({model:model});
                             var result  = amv.render({href: '#' + href});
+                            var $li;
                             // need an <li> element here
                             if (typeof result === 'string') {
-                                subContent += result;
+                                $li = $(result);
                             } else if (result instanceof Element) {
                                 if (result.nodeName === 'BODY') {
-                                    subContent += result.innerHTML;
+                                    $li = $(result.innerHTML);
                                 } else if (result.nodeName === 'LI') {
-                                    subContent += result.outerHTML;
+                                    $li = $(result.outerHTML);
                                 } else {
                                     throw new Error('Unsupported document element for submenu: ' + result.toString());
                                 }
                             } else {
                                 throw new Error('Unsupported result type for submenu: ' + result.toString());
                             }
+                            if ($li.attr('data-sort-key')) {
+                                sorter[$li.attr('data-sort-key')] = $li.clone();
+                            } else {
+                                sorter[$li.find('a').text()] = $li.clone();
+                            }
+                        });
+                        _.each(_.sortBy(_.keys(sorter), function(key){return key;}), function(key){
+                            subContent += sorter[key][0].outerHTML;
                         });
                         content += (templates[url])({
                             label: item.label,
