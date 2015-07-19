@@ -9,10 +9,9 @@
     <xsl:param name="href"/>
 
     <xsl:template match="/">
-        <li>
-            <a href="{$href}">
-                <xsl:value-of select="//tei:titleStmt/tei:title"/>
-            </a>
+        <xsl:variable name="title" select="//tei:titleStmt/tei:title"/>
+        <li data-sort-key="{$title}">
+            <a href="{$href}"><xsl:value-of select="$title"/></a>
         </li>
     </xsl:template>
 
