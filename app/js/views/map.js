@@ -53,16 +53,36 @@ define('views/map', [
             scale.addTo(map);
             // track the currently open popup
             map.on('popupopen', function(evt) {
+                var popup = evt.popup;
+                var popupLatLng = popup.getLatLng();
+                var edgeLatLng = map.containerPointToLatLng(L.DomUtil.getViewportOffset(document.getElementById('article')));
+                var dx, offset, pad;
+                // pan east if the popup is covered by the article (i.e., is to the
+                // right of the article's left edge)
+                if (popupLatLng.lng > edgeLatLng.lng) {
+                    // offset is the amount of the popup that would hang over under the article
+                    // due to the popup's width
+                    offset = $(popup.getContent()).closest('.leaflet-popup-content-wrapper').first().width()/2
+                           - (map.latLngToLayerPoint(edgeLatLng).x - map.latLngToLayerPoint(map.getCenter()).x);
+                    // pad is a slight relief between the popup and the article
+                    pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
+                    pad = pad ? pad.x : 0;
+                    // dx is the distance between the center of the map and the
+                    // map marker for this popup
+                    dx = map.latLngToLayerPoint(popupLatLng).x
+                       - map.latLngToLayerPoint(map.getCenter()).x;
+                    map.panBy([dx + offset + pad,0]);
+                }
                 // event latency between leaflet and backbone
                 // appears to cause popups to collapse erratically
                 // in Firefox when clicking map pins
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    openpopup[popupid(evt.popup.getLatLng())] = true;
+                    openpopup[popupid(popupLatLng)] = true;
                 } else {
-                    openpopup[popupid(evt.popup.getLatLng())] = true;
+                    openpopup[popupid(popupLatLng)] = true;
                 }
             });
-            map.on('popupclose', function(evt){
+            map.on('popupclose', function(evt) {
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
                     openpopup[popupid(evt.popup.getLatLng())] = false;
                 } else {
