@@ -112,8 +112,15 @@ define('views/article', [
                         loaded: function(number) {
                             var $img = $(".slidesjs-control").children(':eq('+ (number - 1) + ')');
                             $img.css({visibility: "hidden"});
-                            $img.css({ height: $(".slidesjs-container").height(), width: "auto" });
+                            $img.css({
+                                  height: 'auto'
+                                , width:  'auto'
+                                , maxHeight: $(".slidesjs-container").height()
+                                , maxWidth:  $(".slidesjs-container").width()
+                                , position:  "relative"
+                            });
                             var left = ($(".slidesjs-container").width() - $img.width())/2;
+                            left -= parseInt($img.css('padding-left'), 10);
                             $img.css({ left: left });
                             $img.css({ visibility: "visible" });
                         },
@@ -125,7 +132,13 @@ define('views/article', [
                         complete: function(number) {
                             var newImg = number - 1;
                             var $img = $(".slidesjs-control").children(':eq('+ newImg + ')');
-                            $img.css({ height: $(".slidesjs-container").height(), width: "auto", position: "relative"});
+                            $img.css({
+                                  height: 'auto'
+                                , width:  'auto'
+                                , maxHeight: $(".slidesjs-container").height()
+                                , maxWidth:  $(".slidesjs-container").width()
+                                , position:  "relative"
+                            });
                             $img.css({ visibility: "visible" });
                         }
                     }
