@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet 
+<xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:tei="http://www.tei-c.org/ns/1.0" 
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
     exclude-result-prefixes="tei"
     version="1.0">
-    
+
     <xsl:output method="html" encoding="UTF-8"/>
     <xsl:strip-space elements="*"/>
     <xsl:preserve-space elements="p div span"/>
-    
+
     <!-- url of the image directory, relative to the base-url of the index.html page -->
     <xsl:param name="article-dir"/>
 
@@ -33,8 +33,8 @@
     </xsl:template>
 
 
-<!-- 
--/- header templates 
+<!--
+-/- header templates
 -->
 
     <xsl:template name="header">
@@ -43,7 +43,7 @@
         <p class="byline"><xsl:text>par </xsl:text><xsl:call-template name="handle-byline"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="handle-date"/>
-        </p>        
+        </p>
     </xsl:template>
 
     <xsl:template name="handle-note">
@@ -51,7 +51,7 @@
         <xsl:text> </xsl:text>
         <span><xsl:value-of select="//tei:teiHeader/tei:fileDesc/tei:notesStmt/tei:relatedItem/tei:bibl/tei:title"/></span>
     </xsl:template>
-    
+
     <xsl:template name="handle-byline">
         <xsl:variable name="count" select="count(//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author)"/>
         <xsl:for-each select="//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:author">
@@ -72,12 +72,12 @@
             </xsl:choose>
         </xsl:for-each>
     </xsl:template>
-    
+
     <xsl:template name="handle-date">
         <span>(<xsl:value-of select="//tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:date"/>)</span>
     </xsl:template>
 
-<!--  
+<!--
 -/- body templates
 -->
 
@@ -111,8 +111,8 @@
         </p>
     </xsl:template>
 
-<!-- 
--/-  footer templates 
+<!--
+-/-  footer templates
 -->
 
     <xsl:template name="footer">
@@ -138,7 +138,7 @@
             </xsl:choose>
         </xsl:variable>
         <!-- .remove class removed when the image loads -->
-        <img id="{concat('fig', position())}" src="{$src}" alt="{tei:title}" class="slidesjs-slide remove"></img>
+        <img id="{concat('fig', position())}" src="{$src}" href="{$src}" alt="{tei:title}" class="slidesjs-slide gallery-item remove"></img>
     </xsl:template>
 
     <xsl:template match="tei:figure" mode="popover">

@@ -7,6 +7,7 @@ require.config({
     underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min',
     leaflet:    '//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet',
     slidesjs:   '//cdnjs.cloudflare.com/ajax/libs/slidesjs/3.0/jquery.slides.min',
+    lightbox:   '//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/jquery.magnific-popup.min',
     partials:   '../partials',
     xsl:        '../script/xsl',
     pages:      '../pages'
@@ -27,6 +28,9 @@ require.config({
     },
     slidesjs: {
         deps: ['jquery']
+    },
+    lightbox: {
+      deps: ['jquery']
     }
   }
 });

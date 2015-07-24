@@ -8,8 +8,10 @@ define('views/article', [
     'text!xsl/article.xsl',
     'text!partials/popover.html',
     'text!partials/popover-content.html',
-    'slidesjs'
-], function($,_,Backbone,DOMWatcher,XML2HTML,xsl,popoverTempl,popoverContentTemp) {
+    'text!partials/lightbox-title.html',
+    'slidesjs',
+    'lightbox'
+], function($,_,Backbone,DOMWatcher,XML2HTML,xsl,popoverTempl,popoverContentTempl,lightboxTitleTempl) {
     'use strict';
     var ArticleView = Backbone.View.extend({
         id: 'article',
@@ -51,10 +53,10 @@ define('views/article', [
             var height = $('#article article').height() - $('#header').outerHeight(true);
             $('#body').css({height:height});
             // add popovers to images
-            var pct = _.template(popoverContentTemp);
+            var pct = _.template(popoverContentTempl);
             $('img.slidesjs-slide').each(function(i,elt) {
                 var id = elt.getAttribute('id');
-                var $po = $('.popover.' + id).remove();
+                var $po = $('.popover.' + id);
                 var title = $po.find('.head').text();
                 $(elt).attr('alt', $po.find('.desc').text());
                 var content = pct({
@@ -68,6 +70,9 @@ define('views/article', [
                     template: popoverTempl,
                     trigger: "hover",
                     placement: "left"
+                });
+                $(elt).click(function(evt) {
+                    $(elt).popover('hide');
                 });
             });
             // remove images that fail to load, since we cannot do
@@ -143,6 +148,24 @@ define('views/article', [
                         }
                     }
                 });
+            });
+            $('.gallery-item').magnificPopup({
+                type: 'image',
+                gallery:{
+                    enabled: true
+                },
+                image: {
+                    titleSrc: function($item) {
+                        var id = $item.el.attr('id');
+                        var $po = $('.popover.' + id);
+                        var pct = _.template(lightboxTitleTempl);
+                        var content = pct({
+                            title: $po.find('.head').text(),
+                            attr: $po.find('.attr').text()
+                        });
+                        return content;
+                    }
+                }
             });
             return that;
         }
