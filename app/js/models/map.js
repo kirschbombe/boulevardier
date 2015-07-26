@@ -10,9 +10,9 @@ define('models/map', [
     'use strict';
     var MapModel = Backbone.Model.extend({
         initialize: function(args) {
-            var that    = this;
-            that.$def   = $.Deferred();
-            that.issue  = args.issue;
+            var that   = this;
+            that.$def  = $.Deferred();
+            that.issue = args.issue;
             if (that.issue === undefined) throw new Error('Missing issue model in map model');
             that.set('router', args.router);
             if (!args.router) throw new Error('No router in MapModel');

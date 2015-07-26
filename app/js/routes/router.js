@@ -10,11 +10,12 @@ define('routes/router', [
     , 'views/map'
     , 'views/menu'
 ], function($,_,Backbone,UserErrorModel,UserErrorView,ClearView,IssueView,MapView,MenuView) {
-    //'use strict';
+    'use strict';
     var Router = Backbone.Router.extend({
         pages   : {},   // config for supported pages
         config  : {},   // global site configuration, i.e., site.json
         issue   : null, // IssueModel for this app
+        mapView : null, // MapView
         initialize: function(opts) {
             var that    = this;
             this.config = opts.config;
@@ -51,15 +52,15 @@ define('routes/router', [
                     , router: that
                 };
                 // clone config to avoid global changes
-                var conifg = JSON.parse(JSON.stringify(pc));
-                if (_.has(conifg, 'view')) {
-                    viewName = conifg.view;
-                } else if (_.has(conifg, 'partial')) {
+                var config = JSON.parse(JSON.stringify(pc));
+                if (_.has(config, 'view')) {
+                    viewName = config.view;
+                } else if (_.has(config, 'partial')) {
                     viewName = 'views/partial';
-                    conifg.partial.page = that.pages.pathBase + conifg.partial.page;
-                    args = _.extend(args,conifg.partial);
-                } else if (_.has(conifg, 'full')) {
-                    window.location.href = conifg.full.page;
+                    config.partial.page = that.pages.pathBase + config.partial.page;
+                    args = _.extend(args,config.partial);
+                } else if (_.has(confg, 'full')) {
+                    window.location.href = config.full.page;
                     return;
                 } else {
                     throw new Error('Unsupported page type in router: ' + page);
@@ -83,14 +84,18 @@ define('routes/router', [
                 isv.render();
             }
             if ($('#map').length === 0) {
-                var mpv = new MapView(args);
-                mpv.render();
+                that.mapView = new MapView(args);
+                that.mapView.render();
             }
             if ($('#menu').children().length === 0) {
                 var mnv = new MenuView(args);
                 mnv.render();
             }
-            that.issue.trigger('select', id);
+            // select the article indicated by the url's route only after
+            // the map has initialized
+            $.when.apply({},[that.mapView.init()]).done(function() {
+                that.issue.trigger('select', id);
+           });
         }
     });
     return Router;

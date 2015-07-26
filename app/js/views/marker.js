@@ -23,8 +23,6 @@ define('views/marker', [
                 that.model.get('issue').trigger('select', that.model.get('article'));
             });
         }
-        // retain empty function to avoid redraw/collapse of
-        // map marker popover
         , render: function() {
             this.$el.html(
                 this.template({

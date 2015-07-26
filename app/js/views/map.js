@@ -7,13 +7,15 @@ define('views/map', [
     , 'text!partials/map.html'
     , 'models/map'
     , 'views/marker'
-], function($,_,Backbone,L,mapPartial,MapModel,MarkerView) {
+    , 'mixins/asyncInit'
+], function($,_,Backbone,L,mapPartial,MapModel,MarkerView,AsyncInit) {
     'use strict';
     var MapView = Backbone.View.extend({
         id:      'map',
         tagName: 'div',
         initialize: function(args) {
             var that = this;
+            that.$def = $.Deferred();
             that.config = args.config;
             that.model = new MapModel(args);
             that.router = args.router;
@@ -40,7 +42,8 @@ define('views/map', [
                 window.setTimeout(function() {
                     col.forEach(function(markerModel) {
                         that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig);
-                    })
+                    });
+                    that.$def.resolve(that);
                 }, that.config.map.markerDelay);
             });
         }
@@ -134,5 +137,6 @@ define('views/map', [
             }).addTo(map);
         }
     });
+    _.extend(MapView.prototype,AsyncInit);
     return MapView;
 });
