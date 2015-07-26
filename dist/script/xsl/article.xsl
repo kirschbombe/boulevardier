@@ -19,6 +19,7 @@
             </header>
             <section id="body">
                 <xsl:call-template name="body"/>
+                <xsl:apply-templates select="//tei:back/tei:div[@type='bibliography']"/>
             </section>
         </article>
         <footer id="footer" class="article-content">
@@ -93,10 +94,12 @@
     </xsl:template>
 
     <xsl:template match="tei:div[@type='bibliography']">
-        <div>
-            <h6>Works Cited</h6>
-            <xsl:apply-templates/>
-        </div>
+        <xsl:if test="tei:listBibl/tei:bibl/text()">
+            <div>
+                <h6>Works Cited</h6>
+                <xsl:apply-templates/>
+            </div>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="tei:q">
