@@ -67,18 +67,21 @@ define('routes/router', [
                 }
                 require([viewName], function(View) {
                     var v = new View(args);
+                    if (viewName === 'views/map') that.mapView = v;
                     v.render();
                 });
             });
         },
         article : function(id) {
-            $('#titlepage').remove();
             var that = this;
             var args = {
                   config: that.config
                 , issue:  that.issue
                 , router: that
             };
+            if ($('#titlepage').length > 0) {
+                $('#titlepage').remove();
+            }
             if ($('#issue').length === 0) {
                 var isv = new IssueView(args);
                 isv.render();
