@@ -36,33 +36,43 @@ define('views/map', [
                     return latlng.lat.toString()
                          + latlng.lng.toString()
                 };
-                that.configureMap(map,mapconfig,openpopup,popupid);
-                // let map render while markers are added
-                map.invalidateSize();
-                window.setTimeout(function() {
-                    col.forEach(function(markerModel) {
-                        that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig);
-                    });
-                    that.$def.resolve(that);
-                }, that.config.map.markerDelay);
+                that.configureMap(map,mapconfig,openpopup,popupid,col.models);
+                col.forEach(function(markerModel) {
+                    that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig);
+                });
+                that.$def.resolve(that);
             });
         }
-        , configureMap : function(map,mapconfig,openpopup,popupid) {
-            var that        = this;
-            var tilelayer   = new L.TileLayer(mapconfig.tileLayer.url, mapconfig.tileLayer.opts);
-            var scale       = L.control.scale(mapconfig.scale);
-            map.setView(new L.LatLng(mapconfig.view.lat, mapconfig.view.lng), mapconfig.view.zoom);
+        , configureMap : function(map,mapconfig,openpopup,popupid,markers) {
+            var that, tilelayer, scale, bounds, edgePtX;
+            that = this;
+            tilelayer = new L.TileLayer(mapconfig.tileLayer.url, mapconfig.tileLayer.opts);
+            scale = L.control.scale(mapconfig.scale);
             map.addLayer(tilelayer);
             scale.addTo(map);
+            edgePtX = L.DomUtil.getViewportOffset(document.getElementById('article')).x;
+            bounds = L.latLngBounds(_.map(markers,function(marker) {
+                var lngLat = marker.get('json').geometry.coordinates.slice(0);
+                return L.latLng(lngLat.reverse());
+            }));
+            if (edgePtX != map.getSize().x) {
+                // map underneath article
+                map.fitBounds(bounds, {
+                    'paddingBottomRight' : [document.body.clientWidth - edgePtX,0]
+                });
+            } else {
+                // map beside article
+                map.fitBounds(bounds);
+            }
+            map.invalidateSize();
             // track the currently open popup
             map.on('popupopen', function(evt) {
-                var popup, $popupWrap, popupLatLng, popupRightX, edgePtX, pad;
+                var popup, $popupWrap, popupLatLng, popupRightX, pad;
                 popup = evt.popup;
                 popupLatLng = popup.getLatLng();
                 // map should pan right/east if the popup balloon is covered by the article;
                 // pad is a slight relief between the popup and the article
                 $popupWrap = $(popup.getContent()).closest('.leaflet-popup-content-wrapper').first();
-                edgePtX = L.DomUtil.getViewportOffset(document.getElementById('article')).x;
                 pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
                 pad = pad ? pad.x : 0;
                 popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;

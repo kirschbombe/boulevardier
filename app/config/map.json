@@ -28,11 +28,6 @@
             "detectRetina" : true
         }
     },
-    "view" : {
-        "lat": 48.87,
-        "lng" : 2.385,
-        "zoom": 12
-    },
     "scale" : {
         "position" : "bottomleft",
         "maxWidth" : 100,
