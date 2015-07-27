@@ -66,7 +66,7 @@ define('views/map', [
                 pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
                 pad = pad ? pad.x : 0;
                 popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
-                if (popupRightX > edgePtX) map.panBy([popupRightX - edgePtX,0]);
+                if (popupRightX > edgePtX && edgePtX != map.getSize().x) map.panBy([popupRightX - edgePtX,0]);
                 // event latency between leaflet and backbone appears to cause popups to collapse
                 // erratically in Firefox when clicking map pins
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
