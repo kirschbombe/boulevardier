@@ -13,6 +13,7 @@ var paths = {
     , 'text'        : 'test/lib/requirejs-text/text'
     , 'leaflet'     : 'test/lib/leaflet/dist/leaflet'
     , 'slidesjs'    : 'test/lib/Slides-SlidesJS-3/source/jquery.slides'
+    , 'lightbox'    : 'test/lib/Magnific-Popup/jquery.magnific-popup.min'
 
     , 'fixtures'    : 'test/fixtures'
     , 'utils'       : 'test/lib/utils'
