@@ -55,7 +55,9 @@ define('views/map', [
                 var lngLat = marker.get('json').geometry.coordinates.slice(0);
                 return L.latLng(lngLat.reverse());
             }));
-            if (edgePtX != map.getSize().x) {
+            if (edgePtX === 0) {
+                map.fitBounds(bounds);
+            } else if (edgePtX != map.getSize().x) {
                 // map underneath article
                 map.fitBounds(bounds, {
                     'paddingBottomRight' : [document.body.clientWidth - edgePtX,0]
@@ -76,7 +78,8 @@ define('views/map', [
                 pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
                 pad = pad ? pad.x : 0;
                 popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
-                if (popupRightX > edgePtX && edgePtX != map.getSize().x) map.panBy([popupRightX - edgePtX,0]);
+                if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x)
+                    map.panBy([popupRightX - edgePtX,0]);
                 // event latency between leaflet and backbone appears to cause popups to collapse
                 // erratically in Firefox when clicking map pins
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
