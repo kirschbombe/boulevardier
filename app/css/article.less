@@ -11,7 +11,7 @@
     color: rgba(0, 0, 0, 1.0);
 
     article {
-        padding-left: 30px; 
+        padding-left: 30px;
         padding-right: 30px;
         overflow-y: hidden;
         heading {
@@ -22,8 +22,8 @@
             height: 50vh;
             padding-bottom: 10px;
         }
-    }    
-    article.before-footer { 
+    }
+    article.before-footer {
         height: 66vh;
     }
     article.no-footer {
@@ -42,10 +42,19 @@
         width: 100%;
         padding-top: 30px;
         overflow-y: hidden;
-    }    
+    }
+    @media (max-width: @split-screen-min) {
+        #header {
+            margin-top: 10px;
+        }
+    }
+    @media (min-width: @split-screen-min) {
+        #header {
+            margin-top: 30px;
+        }
+    }
     #header {
         overflow-y: scroll;
-        margin-top: 30px;
     }
     h1 {
          font-size: 30px;
@@ -55,7 +64,7 @@
          font-weight: 400;
          font-style: normal;
     }
-    
+
     p {
          font-size: 15px;
          line-height: 21px;
@@ -65,7 +74,7 @@
          margin: 0px 0px 5px 0px;
          text-align: left;
     }
-    
+
     p.pullquote {
          font-size: 14px;
          line-height: 17px;
@@ -78,7 +87,16 @@
          font-weight: 100;
          font-style: normal;
     }
-    
+    @media (max-width: @split-screen-min) {
+        p.heading {
+            margin: 0px 0px 5px 0px;
+        }
+    }
+    @media (min-width: @split-screen-min) {
+        p.heading {
+            margin: 0px 0px 15px 0px;
+        }
+    }
     p.heading {
          letter-spacing: 2px;
          font-size: 13px;
@@ -88,18 +106,25 @@
          font-family: "Open Sans Condensed";
          font-weight: 300;
          font-style: italic;
-         margin: 0px 0px 15px 0px;
     }
-    
+    @media (max-width: @split-screen-min) {
+        p.byline {
+            margin: 0px 0px 20px 0px;
+        }
+    }
+    @media (min-width: @split-screen-min) {
+        p.byline {
+            margin: 0px 0px 35px 0px;
+        }
+    }
     p.byline {
          font-family: "Open Sans Condensed";
          font-weight: 300;
          font-style: italic;
          font-size: 15px;
          line-height: 0px;
-         margin: 0px 0px 35px 0px;
     }
-    
+
     p.bibl {
          font-family: "open-sans";
          font-weight: 100;
@@ -108,7 +133,7 @@
          line-height: 15px;
          padding: 0px;
     }
-    
+
     h6 {
          margin: 20px 0px 5px 0px;
          border-width: 0px 0px 1px 0px;
@@ -117,17 +142,17 @@
          font-weight: 400;
          font-style: normal;
     }
-    
+
     h3 {
          font-family: "Roboto";
          font-weight: 500;
          font-style: italic;
          font-size: 16px;
     }
-    
+
     h5 {
          font-family: "Della Respira";
          font-weight: 400;
          font-style: normal;
-    }   
+    }
 }

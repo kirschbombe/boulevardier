@@ -25,16 +25,29 @@ body {
 
 @media (max-width: @split-screen-min) {
     body {
-        * {
-            display: none;
-        }
-        #notsupported {
-            display: block;
-            height: 100%;
-            width: 100%;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    #map {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 50vh;
+        width: 100vw;
+    }
+    #article {
+        position: absolute;
+        left: 0;
+        top: 50vh;
+        height: 50vh;
+        width: 100vw;
+
+        article {
+            height: 50vh !important;
+            width: 100vw;
         }
     }
-}  
+}
 
 @media (min-width: @split-screen-min) and (max-width: @split-screen-width) {
     #map {
@@ -52,7 +65,7 @@ body {
     }
 }
 
-@media (min-width: @split-screen-width) { 
+@media (min-width: @split-screen-width) {
     body {
         overflow-y: hidden;
         overflow-x: hidden;

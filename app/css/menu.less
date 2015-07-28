@@ -1,20 +1,27 @@
 
+@button-width: 40px;
+@relief: 2px;
+@button-color: grey;
+@hamburger-color: white;
+
 #issue {
     #menu {
-    
+        @media (max-width: @split-screen-min) {
+            position: fixed;
+            right: @button-width/2;
+        }
+        @media (min-width: @split-screen-min) {
+            position: absolute;
+            left: -1*(@button-width + @relief);
+        }
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    
-        @button-width: 40px;
-        @relief: 2px;
-        position: absolute;
         width: @button-width;
-        left: -1*(@button-width + @relief);
-        top:  @relief; 
+        top: @relief;
         button {
-            background-color: grey;
+            background-color: @button-color;
         }
         span.glyphicon.glyphicon-menu-hamburger {
-            color: white;
+            color: @hamburger-color;
         }
         .dropdown-submenu {
             position: relative;
