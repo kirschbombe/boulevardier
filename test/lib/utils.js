@@ -42,8 +42,10 @@ return {
           if (a.textContent !== b.textContent) {
             return false;
           }
+      } else if (a.nodeType == Node.COMMENT_NODE) {
+         // noop
       } else {
-          throw new Error('Unhandled node type');
+          throw new Error('Unhandled node type: ' + a.nodeType);
       }
       return true;
     }
