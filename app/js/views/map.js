@@ -32,13 +32,22 @@ define('views/map', [
                 var mapconfig = that.model.get('mapconfig');
                 var map       = new L.Map(mapconfig.id, mapconfig.map);
                 var openpopup = {};
+                var layerMarkers = {};
+                var layerGroups = {};
                 var popupid = function(latlng) {
                     return latlng.lat.toString()
                          + latlng.lng.toString()
                 };
                 that.configureMap(map,mapconfig,openpopup,popupid,col.models);
                 col.forEach(function(markerModel) {
-                    that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig);
+                    that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig,layerMarkers);
+                });
+                _.each(_.keys(layerMarkers), function(layerName){
+                    layerGroups[layerName] = L.layerGroup(layerMarkers[layerName]);
+                });
+                L.control.layers(null, layerGroups, mapconfig.control.layers.options).addTo(map);
+                $('input.leaflet-control-layers-selector').each(function(i,elt){
+                   $(elt).click();
                 });
                 that.$def.resolve(that);
             });
@@ -96,7 +105,7 @@ define('views/map', [
                 }
             });
         }
-        , addMarkerToMap: function(markerModel,map,openpopup,popupid,mapconfig) {
+        , addMarkerToMap: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers) {
             var that        = this;
             var geojson     = markerModel.get('json');
             var markerView  = new MarkerView({model: markerModel, router: that.router});
@@ -127,6 +136,12 @@ define('views/map', [
                         mapMarker.openPopup();
                     });
                     openpopup[popupid(mapMarker.getLatLng())] = false;
+                    // add mapmarker to layer by layer type
+                    if (_.has(layerMarkers, geojson.properties.layer)) {
+                        layerMarkers[geojson.properties.layer].push(mapMarker);
+                    } else {
+                        layerMarkers[geojson.properties.layer] = [mapMarker];
+                    }
                 },
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {
@@ -137,7 +152,7 @@ define('views/map', [
                         riseOnHover:    mapconfig.features.riseOnHover
                     });
                 }
-            }).addTo(map);
+            });
         }
     });
     _.extend(MapView.prototype,AsyncInit);

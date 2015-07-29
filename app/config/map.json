@@ -35,6 +35,15 @@
         "imperial" : true,
         "updateWhenIdle" : false
     },
+    "control" : {
+        "layers" : {
+            "options" : {
+                "autoZIndex" : true,
+                "collapsed"  : true,
+                "position"   : "topleft"
+            }
+        }
+    },
     "geojson" : {
         "cache" : true
     },
