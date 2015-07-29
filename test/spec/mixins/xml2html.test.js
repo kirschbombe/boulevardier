@@ -31,7 +31,6 @@ define([
         expect(utils.diff(orig,result)).to.equal(false);       
       });
       it('expect geojson.xsl to output correct result',function() {
-
         var result = XML2HTML.xml2html(in1, gXsl, null, 'text');
         expect(_.isEqual(
             JSON.parse(result),
