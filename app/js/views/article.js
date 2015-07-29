@@ -167,6 +167,9 @@ define('views/article', [
                     }
                 }
             });
+            $('.glyphicon.glyphicon-expand').on('click', function(evt){
+                $('.gallery-item').magnificPopup('open');
+            });
             return that;
         }
     });

@@ -40,7 +40,10 @@
 
     <xsl:template name="header">
         <p class="heading"><xsl:call-template name="handle-note"/></p>
-        <h1 class="article-title"><xsl:apply-templates select="//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/></h1>
+        <h1 class="article-title">
+            <xsl:apply-templates select="//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
+            <span class="glyphicon glyphicon-expand"></span>
+        </h1>
         <p class="byline"><xsl:text>par </xsl:text><xsl:call-template name="handle-byline"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="handle-date"/>
