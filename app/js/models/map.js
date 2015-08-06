@@ -13,6 +13,7 @@ define('models/map', [
             var that   = this;
             that.$def  = $.Deferred();
             that.issue = args.issue;
+            that.set('siteconfig', args.config);
             if (that.issue === undefined) throw new Error('Missing issue model in map model');
             that.set('router', args.router);
             if (!args.router) throw new Error('No router in MapModel');
@@ -38,47 +39,62 @@ define('models/map', [
             });
         },
         defaults: {
-            "mapconfig"     : {}
+              "mapconfig"     : {}
+            , "siteconfig"    : {}
+            , "iconUrls"      : {}
         },
         _makeCollection : function(articles,cbs) {
             var that = this;
-            var deferreds = [];
             var col = new MarkersCollection();
             that.set('collection', col);
-            var markers = _.map(_.range(articles.length), function(){return undefined;});
+            var markers = new Array(articles.length);
             var error = false;
             var errorMsg = '';
-            articles.forEach(function(article,i){
-                var $artDef = $.Deferred();
-                deferreds.push($artDef);
-                article.init().done(function() {
-                    var mm;
-                    try {
-                        mm = new MarkerModel({
-                              issue     : that.issue
-                            , article   : article
-                            , json      : article.geojson()
-                            , router    : that.router
-                        });
-                    // on failure to create geojson from article, warn
-                    // but do not block map
-                    } catch (e) {
-                        error = true;
-                        errorMsg += ("\n" + e.toString());
-                        $artDef.resolve();
-                        return;
-                     }
-                    markers[i] = mm;
-                    $artDef.resolve();
-                });
+            var icons = that.get('iconUrls');
+            var icconfig  = that.attributes.siteconfig.markers.icons;
+            var iconFiles = _.shuffle(_.flatten(
+                _.map(icconfig, function(entry) {
+                    return _.map(entry.files, function(file) {
+                        return entry.dir.concat(file);
+                    });
+                })
+            ));
+            // do map marker icon initialization; this seems like it should
+            // be isolated to the MapView or MarkerView, but is data used
+            // elsewhere in the application, so they are assigned here
+            articles.forEach(function(article,i) {
+                var geojson = (article.getGeojson() || {"properties":{}});
+                var layer = geojson.properties.layer;
+                icons[layer] = icons[layer] || iconFiles.pop();
+                article.set('iconUrl', icons[layer]);
             });
-            $.when.apply({},deferreds).done(function() {
-                col.add(markers);
-                if (error) throw new Error(errorMsg);
-                cbs.success();
-            }).fail(function() {
+            // articles have completed initialization since
+            // the issue has, so
+            articles.forEach(function(article,i) {
+                var mm;
+                try {
+                    mm = new MarkerModel({
+                          issue     : that.issue
+                        , article   : article
+                        , json      : article.getGeojson()
+                        , router    : that.router
+                        , iconUrl   : icons[article.get('placeType')]
+                    });
+                // on failure to create geojson from article, warn
+                // but do not block map
+                } catch (e) {
+                    error = true;
+                    errorMsg += ("\n" + e.toString());
+                    return;
+                 }
+                markers[i] = mm;
+            });
+            if (error) {
                 cbs.fail();
-            });
+                throw new Error(errorMsg);
+            }
+            col.add(markers);
+            cbs.success();
         }
     });
     _.extend(MapModel.prototype,AsyncInit);

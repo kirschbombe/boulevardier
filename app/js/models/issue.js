@@ -28,7 +28,6 @@ define('models/issue', [
                     path:       artdir + file
                 });
             });
-
             var inits = _.map(articles, function(article){return article.init();});
             // NOTE: .fail() is not called; failure is handled in .always()
             $.when({},inits).fail(function() {
@@ -73,7 +72,8 @@ define('models/issue', [
             {
                 return;
             } else {
-                if (this.get('activeArticle')) this.get('activeArticle').unselect();
+                if (this.get('activeArticle'))
+                    this.get('activeArticle').unselect();
                 that.set('activeArticle', art);
             }
             // this involves async initialization

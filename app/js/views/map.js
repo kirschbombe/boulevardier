@@ -5,10 +5,11 @@ define('views/map', [
     , 'backbone'
     , 'leaflet'
     , 'text!partials/map.html'
+    , 'text!partials/marker-legend.html'
     , 'models/map'
     , 'views/marker'
     , 'mixins/asyncInit'
-], function($,_,Backbone,L,mapPartial,MapModel,MarkerView,AsyncInit) {
+], function($,_,Backbone,L,mapPartial,legendPartial,MapModel,MarkerView,AsyncInit) {
     'use strict';
     var MapView = Backbone.View.extend({
         id:      'map',
@@ -31,6 +32,7 @@ define('views/map', [
                 var col       = that.model.get('collection');
                 var mapconfig = that.model.get('mapconfig');
                 var map       = new L.Map(mapconfig.id, mapconfig.map);
+                var legendTempl = _.template(legendPartial);
                 var openpopup = {};
                 var layerMarkers = {};
                 var layerGroups = {};
@@ -39,13 +41,25 @@ define('views/map', [
                          + latlng.lng.toString()
                 };
                 that.configureMap(map,mapconfig,openpopup,popupid,col.models);
+                // do per-marker map configuration
                 col.forEach(function(markerModel) {
-                    that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig,layerMarkers);
+                    var geojson = (markerModel.get('json') || {"properties":{}});
+                    var layer = geojson.properties.layer;
+                    var iconConfig = mapconfig.features.icon;
+                    iconConfig.iconUrl = (markerModel.get('iconUrl') || '');
+                    var icon = L.icon(iconConfig);
+                    that.addMarkerToLayer(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconConfig.iconUrl);
                 });
-                _.each(_.keys(layerMarkers), function(layerName){
-                    layerGroups[layerName] = L.layerGroup(layerMarkers[layerName]);
+                // add marker layers
+                _.each(_.keys(layerMarkers), function(layerName) {
+                    var layerLegend = legendTempl({
+                          iconUrl: that.model.get('iconUrls')[layerName]
+                        , title  : layerName
+                    });
+                    layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
                 });
                 L.control.layers(null, layerGroups, mapconfig.control.layers.options).addTo(map);
+                // enable each layer; TODO: determine if this is configurable
                 $('input.leaflet-control-layers-selector').each(function(i,elt){
                    $(elt).click();
                 });
@@ -78,17 +92,9 @@ define('views/map', [
             map.invalidateSize();
             // track the currently open popup
             map.on('popupopen', function(evt) {
-                var popup, $popupWrap, popupLatLng, popupRightX, pad;
-                popup = evt.popup;
-                popupLatLng = popup.getLatLng();
-                // map should pan right/east if the popup balloon is covered by the article;
-                // pad is a slight relief between the popup and the article
-                $popupWrap = $(popup.getContent()).closest('.leaflet-popup-content-wrapper').first();
-                pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
-                pad = pad ? pad.x : 0;
-                popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
-                if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x)
-                    map.panBy([popupRightX - edgePtX,0]);
+                var popup = evt.popup;
+                var popupLatLng = popup.getLatLng();
+                that.handlePopupPosition(map,popup);
                 // event latency between leaflet and backbone appears to cause popups to collapse
                 // erratically in Firefox when clicking map pins
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -105,10 +111,32 @@ define('views/map', [
                 }
             });
         }
-        , addMarkerToMap: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers) {
+        , handlePopupPosition : function(map,popup) {
+            var edgePtX, $popupWrap, popupLatLng, popupRightX, pad;
+            popupLatLng = popup.getLatLng();
+            if (popupLatLng === undefined) return;
+            edgePtX = L.DomUtil.getViewportOffset(document.getElementById('article')).x;
+            // map should pan right/east if the popup balloon is covered by the article;
+            // pad is a slight relief between the popup and the article
+            $popupWrap = $(popup.getContent()).closest('.leaflet-popup-content-wrapper').first();
+            pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
+            pad = pad ? pad.x : 0;
+            popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
+            if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x)
+                map.panBy([popupRightX - edgePtX,0]);
+        }
+        , addMarkerToLayer: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconUrl) {
             var that        = this;
             var geojson     = markerModel.get('json');
-            var markerView  = new MarkerView({model: markerModel, router: that.router});
+            var markerView  = new MarkerView({
+                  model     : markerModel
+                , router    : that.router
+                , iconUrl   : iconUrl
+                , iconTitle : geojson.properties.layer
+            });
+            markerView.on('active', function() {
+                that.handlePopupPosition(map,markerView.popup);
+            });
             markerView.render();
             L.geoJson(geojson, {
                 // feature is the geojson, a raw JS object
@@ -116,6 +144,7 @@ define('views/map', [
                 onEachFeature: function (feature, mapMarker) {
                     // add the popup to this marker
                     var popup = L.popup(mapconfig.features.popup);
+                    markerView.popup = popup;
                     popup.setContent(markerView.el);
                     mapMarker.bindPopup(popup);
                     // override the default click handler for the
@@ -145,11 +174,11 @@ define('views/map', [
                 },
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {
-                        icon:           L.icon(mapconfig.features.icon),
-                        clickable:      !!feature.properties.text,
-                        title:          (feature.properties.markername || ''),
-                        opacity:        mapconfig.features.opacity,
-                        riseOnHover:    mapconfig.features.riseOnHover
+                        icon:        icon,
+                        clickable:   !!feature.properties.text,
+                        title:       (feature.properties.markername || ''),
+                        opacity:     mapconfig.features.opacity,
+                        riseOnHover: mapconfig.features.riseOnHover
                     });
                 }
             });
