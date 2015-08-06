@@ -1,1 +1,9 @@
 node_modules/
+test/lib/backbone/
+test/lib/bootstrap/
+test/lib/jquery/
+test/lib/leaflet/
+test/lib/requirejs-text/
+test/lib/requirejs/
+test/lib/underscore/
+
