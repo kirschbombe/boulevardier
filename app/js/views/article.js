@@ -22,10 +22,15 @@ define('views/article', [
         render: function () {
             var that = this;
             that.$el = $('#' + that.id);
+            if (that.$el.find('#' + that.model.cid).length !== 0)
+                return;
             var html = this.xml2html(
                 this.model.get('xml'),
-                xsl,
-                {"article-dir": that.config.articles.pathBase}
+                xsl, {
+                      "article-dir": that.config.articles.pathBase
+                    , "iconUrl"    : that.model.get('iconUrl')
+                    , "cid"        : that.model.cid
+                }
             );
             try {
                 $('.article-content').remove();
@@ -43,6 +48,9 @@ define('views/article', [
                     throw new Error("Failed to handle article images");
                 }
             }
+            that.$el.find('.article-marker').click(function(i,elt) {
+                that.model.select();
+            });
             return that;
         },
         remove: function() { /* retain */},

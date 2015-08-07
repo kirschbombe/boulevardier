@@ -30,48 +30,31 @@ define('views/map', [
             // Leaflet config
             this.model.init().done(function() {
                 var col       = that.model.get('collection');
-                var icconfig  = that.config.markers.icons;
                 var mapconfig = that.model.get('mapconfig');
                 var map       = new L.Map(mapconfig.id, mapconfig.map);
                 var legendTempl = _.template(legendPartial);
                 var openpopup = {};
                 var layerMarkers = {};
                 var layerGroups = {};
-                var layerIcons = {};
-                var iconFiles = _.shuffle(_.flatten(
-                    _.map(icconfig, function(entry) {
-                        return _.map(entry.files, function(file) {
-                            return entry.dir.concat(file);
-                        });
-                    })
-                ));
                 var popupid = function(latlng) {
                     return latlng.lat.toString()
                          + latlng.lng.toString()
                 };
                 that.configureMap(map,mapconfig,openpopup,popupid,col.models);
-                // marker color setup
-                col.forEach(function(markerModel) {
-                    var geojson = (markerModel.get('json') || {"properties":{}});
-                    var layer = geojson.properties.layer;
-                    layerMarkers[layer] = [];
-                    layerIcons[layer] = layerIcons[layer] || iconFiles.pop();
-                });
                 // do per-marker map configuration
                 col.forEach(function(markerModel) {
                     var geojson = (markerModel.get('json') || {"properties":{}});
                     var layer = geojson.properties.layer;
                     var iconConfig = mapconfig.features.icon;
-                    var iconUrl = layerIcons[layer];
-                    iconConfig['iconUrl'] = iconUrl;
+                    iconConfig.iconUrl = (markerModel.get('iconUrl') || '');
                     var icon = L.icon(iconConfig);
-                    that.addMarkerToLayer(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconUrl);
+                    that.addMarkerToLayer(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconConfig.iconUrl);
                 });
                 // add marker layers
-                _.each(_.keys(layerMarkers), function(layerName){
+                _.each(_.keys(layerMarkers), function(layerName) {
                     var layerLegend = legendTempl({
-                          iconUrl: layerIcons[layerName]
-                        , title: layerName
+                          iconUrl: that.model.get('iconUrls')[layerName]
+                        , title  : layerName
                     });
                     layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
                 });
@@ -173,7 +156,11 @@ define('views/map', [
                     });
                     openpopup[popupid(mapMarker.getLatLng())] = false;
                     // add mapmarker to layer by layer type
-                    layerMarkers[geojson.properties.layer].push(mapMarker);
+                    if (_.has(layerMarkers, geojson.properties.layer)) {
+                        layerMarkers[geojson.properties.layer].push(mapMarker);
+                    } else {
+                        layerMarkers[geojson.properties.layer] = [mapMarker];
+                    }
                 },
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {

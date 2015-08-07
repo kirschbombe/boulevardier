@@ -30,7 +30,7 @@ define('views/marker', [
             this.$el.html(
                 this.template({
                     articleid:  this.model.article.get('articleid'),
-                    geojson:    this.model.article.geojson(),
+                    geojson:    this.model.article.getGeojson(),
                     iconUrl:    this.iconUrl,
                     iconTitle:  this.iconTitle
                 })

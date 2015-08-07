@@ -16,6 +16,9 @@ define('models/article', [
             var $get = that.fetchXML(that.get('path'));
             $.when($get).done(function(data) {
                 that.set('xml', data);
+                that._mkGeojson();
+                if (that.geojson !== null)
+                    that.set('placeType', that.geojson.properties.layer);
                 that.$def.resolve(that);
             }).fail(function() {
                 that.$def.reject();
@@ -24,8 +27,11 @@ define('models/article', [
         defaults: {
             //TODO: 'xml': serialize? and cache to localstorage
             // add adapter for access through .attributes
-            "xml"   : null,     // Document
-            "marker" : null     // associated mapmarker object, needed for TOC linkage
+              "xml"       : null    // Document
+            , "marker"    : null    // associated mapmarker object, needed for TOC linkage
+            , "placeType" : null
+            , "iconUrl"   : ''
+            , "active"    : false
         },
         select: function() {
             this.trigger('active');
@@ -33,16 +39,19 @@ define('models/article', [
         unselect: function() {
             this.trigger('inactive');
         },
-        geojson: function() {
-            var geojson = '{}';
+        geojson: null,
+        getGeojson: function() {
+            if (this.geojson === null)
+                this._mkGeojson();
+            return this.geojson;
+        },
+        _mkGeojson: function() {
             try {
-                var xml = this.get('xml');
-                var jsonString = this.xml2html(xml, geoJsonXsl, {}, 'text');
-                geojson = JSON.parse(jsonString);
+                var jsonString = this.xml2html(this.get('xml'), geoJsonXsl, {}, 'text');
+                this.geojson = JSON.parse(jsonString);
             } catch (e) {
                 throw new Error("Failed to parse to json: " + e.toString());
             }
-            return geojson;
         }
     });
     _.extend(ArticleModel.prototype,FetchXML);
