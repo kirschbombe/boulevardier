@@ -5,10 +5,11 @@ define('views/map', [
     , 'backbone'
     , 'leaflet'
     , 'text!partials/map.html'
+    , 'text!partials/marker-legend.html'
     , 'models/map'
     , 'views/marker'
     , 'mixins/asyncInit'
-], function($,_,Backbone,L,mapPartial,MapModel,MarkerView,AsyncInit) {
+], function($,_,Backbone,L,mapPartial,legendPartial,MapModel,MarkerView,AsyncInit) {
     'use strict';
     var MapView = Backbone.View.extend({
         id:      'map',
@@ -29,23 +30,53 @@ define('views/map', [
             // Leaflet config
             this.model.init().done(function() {
                 var col       = that.model.get('collection');
+                var icconfig  = that.config.markers.icons;
                 var mapconfig = that.model.get('mapconfig');
                 var map       = new L.Map(mapconfig.id, mapconfig.map);
+                var legendTempl = _.template(legendPartial);
                 var openpopup = {};
                 var layerMarkers = {};
                 var layerGroups = {};
+                var layerIcons = {};
+                var iconFiles = _.shuffle(_.flatten(
+                    _.map(icconfig, function(entry) {
+                        return _.map(entry.files, function(file) {
+                            return entry.dir.concat(file);
+                        });
+                    })
+                ));
                 var popupid = function(latlng) {
                     return latlng.lat.toString()
                          + latlng.lng.toString()
                 };
                 that.configureMap(map,mapconfig,openpopup,popupid,col.models);
+                // marker color setup
                 col.forEach(function(markerModel) {
-                    that.addMarkerToMap(markerModel,map,openpopup,popupid,mapconfig,layerMarkers);
+                    var geojson = (markerModel.get('json') || {"properties":{}});
+                    var layer = geojson.properties.layer;
+                    layerMarkers[layer] = [];
+                    layerIcons[layer] = layerIcons[layer] || iconFiles.pop();
                 });
+                // do per-marker map configuration
+                col.forEach(function(markerModel) {
+                    var geojson = (markerModel.get('json') || {"properties":{}});
+                    var layer = geojson.properties.layer;
+                    var iconConfig = mapconfig.features.icon;
+                    var iconUrl = layerIcons[layer];
+                    iconConfig['iconUrl'] = iconUrl;
+                    var icon = L.icon(iconConfig);
+                    that.addMarkerToLayer(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconUrl);
+                });
+                // add marker layers
                 _.each(_.keys(layerMarkers), function(layerName){
-                    layerGroups[layerName] = L.layerGroup(layerMarkers[layerName]);
+                    var layerLegend = legendTempl({
+                          iconUrl: layerIcons[layerName]
+                        , title: layerName
+                    });
+                    layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
                 });
                 L.control.layers(null, layerGroups, mapconfig.control.layers.options).addTo(map);
+                // enable each layer; TODO: determine if this is configurable
                 $('input.leaflet-control-layers-selector').each(function(i,elt){
                    $(elt).click();
                 });
@@ -105,10 +136,15 @@ define('views/map', [
                 }
             });
         }
-        , addMarkerToMap: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers) {
+        , addMarkerToLayer: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconUrl) {
             var that        = this;
             var geojson     = markerModel.get('json');
-            var markerView  = new MarkerView({model: markerModel, router: that.router});
+            var markerView  = new MarkerView({
+                  model     : markerModel
+                , router    : that.router
+                , iconUrl   : iconUrl
+                , iconTitle : geojson.properties.layer
+            });
             markerView.render();
             L.geoJson(geojson, {
                 // feature is the geojson, a raw JS object
@@ -137,19 +173,15 @@ define('views/map', [
                     });
                     openpopup[popupid(mapMarker.getLatLng())] = false;
                     // add mapmarker to layer by layer type
-                    if (_.has(layerMarkers, geojson.properties.layer)) {
-                        layerMarkers[geojson.properties.layer].push(mapMarker);
-                    } else {
-                        layerMarkers[geojson.properties.layer] = [mapMarker];
-                    }
+                    layerMarkers[geojson.properties.layer].push(mapMarker);
                 },
                 pointToLayer: function (feature, latlng) {
                     return L.marker(latlng, {
-                        icon:           L.icon(mapconfig.features.icon),
-                        clickable:      !!feature.properties.text,
-                        title:          (feature.properties.markername || ''),
-                        opacity:        mapconfig.features.opacity,
-                        riseOnHover:    mapconfig.features.riseOnHover
+                        icon:        icon,
+                        clickable:   !!feature.properties.text,
+                        title:       (feature.properties.markername || ''),
+                        opacity:     mapconfig.features.opacity,
+                        riseOnHover: mapconfig.features.riseOnHover
                     });
                 }
             });

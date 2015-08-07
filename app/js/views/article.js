@@ -6,8 +6,8 @@ define('views/article', [
     'mixins/domwatcher',
     'mixins/xml2html',
     'text!xsl/article.xsl',
-    'text!partials/popover.html',
-    'text!partials/popover-content.html',
+    'text!partials/image-popover.html',
+    'text!partials/image-popover-content.html',
     'text!partials/lightbox-title.html',
     'slidesjs',
     'lightbox'

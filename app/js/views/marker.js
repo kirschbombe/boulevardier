@@ -10,9 +10,12 @@ define('views/marker', [
         template: _.template(tmpl),
         el: '',
         router: null,
+        iconUrl: '',
         initialize: function(args) {
             var that = this;
             that.router = args.router;
+            that.iconUrl = args.iconUrl;
+            that.iconTitle = args.iconTitle;
             // when a marker is made active (e.g., by selection
             // of a mark in the map), propogate the event to the
             // issue, for updates elsewhere in the application
@@ -27,9 +30,14 @@ define('views/marker', [
             this.$el.html(
                 this.template({
                     articleid:  this.model.article.get('articleid'),
-                    geojson:    this.model.article.geojson()
+                    geojson:    this.model.article.geojson(),
+                    iconUrl:    this.iconUrl,
+                    iconTitle:  this.iconTitle
                 })
             );
+            this.$el.find('img.icon').popover({
+                container: this.$el.find('span.icon')
+            });
         }
     });
     return MarkerView;
