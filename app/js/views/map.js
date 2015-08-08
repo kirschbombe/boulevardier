@@ -52,9 +52,11 @@ define('views/map', [
                 });
                 // add marker layers
                 _.each(_.keys(layerMarkers), function(layerName) {
+                    var klass = layerName.replace(/\s+/g, '-');
                     var layerLegend = legendTempl({
                           iconUrl: that.model.get('iconUrls')[layerName]
                         , title  : layerName
+                        , klass  : klass
                     });
                     layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
                 });
@@ -122,8 +124,12 @@ define('views/map', [
             pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
             pad = pad ? pad.x : 0;
             popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
-            if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x)
+            if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x) {
                 map.panBy([popupRightX - edgePtX,0]);
+            } else if (!map.getBounds().contains(popup.getLatLng())) {
+                map.closePopup(popup);
+                map.openPopup(popup);
+            }
         }
         , addMarkerToLayer: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconUrl) {
             var that        = this;

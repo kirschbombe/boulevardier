@@ -15,9 +15,11 @@ define('views/article', [
     'use strict';
     var ArticleView = Backbone.View.extend({
         id: 'article',
+        legendClass: '',
         initialize: function(args) {
             var that = this;
             that.config = args.config;
+            that.legendClass = '.' + that.model.attributes.placeType.replace(/\s+/g, '-');
         },
         render: function () {
             var that = this;
@@ -50,7 +52,16 @@ define('views/article', [
             }
             that.$el.find('.article-marker').click(function(i,elt) {
                 that.model.select();
-            });
+            }).hover(
+                function(evt) {
+                    $('.leaflet-control-layers.leaflet-control').addClass('leaflet-control-layers-expanded');
+                    $('.leaflet-control-layers.leaflet-control').find(that.legendClass).addClass('legend-highlight');
+                },
+                function(evt) {
+                    $('.leaflet-control-layers.leaflet-control').removeClass('leaflet-control-layers-expanded');
+                    $('.leaflet-control-layers.leaflet-control').find(that.legendClass).removeClass('legend-highlight');
+                }
+            );
             return that;
         },
         remove: function() { /* retain */},
