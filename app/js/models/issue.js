@@ -28,7 +28,6 @@ define('models/issue', [
                     path:       artdir + file
                 });
             });
-
             var inits = _.map(articles, function(article){return article.init();});
             // NOTE: .fail() is not called; failure is handled in .always()
             $.when({},inits).fail(function() {

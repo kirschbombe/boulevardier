@@ -28,7 +28,6 @@ define('models/article', [
             //TODO: 'xml': serialize? and cache to localstorage
             // add adapter for access through .attributes
               "xml"       : null    // Document
-            , "marker"    : null    // associated mapmarker object, needed for TOC linkage
             , "placeType" : null
             , "iconUrl"   : ''
             , "active"    : false

@@ -80,7 +80,6 @@ define('models/map', [
                         , router    : that.router
                         , iconUrl   : icons[article.get('placeType')]
                     });
-                    article.set('marker', mm);
                 // on failure to create geojson from article, warn
                 // but do not block map
                 } catch (e) {

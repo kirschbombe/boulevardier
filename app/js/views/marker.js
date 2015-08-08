@@ -16,14 +16,9 @@ define('views/marker', [
             that.router = args.router;
             that.iconUrl = args.iconUrl;
             that.iconTitle = args.iconTitle;
-            // when a marker is made active (e.g., by selection
-            // of a mark in the map), propogate the event to the
-            // issue, for updates elsewhere in the application
             that.model.on('active', function() {
                 var url = 'article/' + that.model.article.get('articleid');
                 that.router.navigate(url, {trigger: true});
-                // ensure that the article is has been selected
-                that.model.get('issue').trigger('select', that.model.get('article'));
             });
         }
         , render: function() {
