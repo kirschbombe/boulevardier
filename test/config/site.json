@@ -45,5 +45,22 @@
   "articles" : {
     "pathBase"  : "data/articles/",
     "files"     : []
+   },
+   "markers" : {
+        "icons" : [
+            { "dir"   : "app/icons/",
+              "files" : [
+                "noun_33862_cc_aqua.svg"   ,
+                "noun_33862_cc_black.svg"  ,
+                "noun_33862_cc_blue.svg"   ,
+                "noun_33862_cc_green.svg"  ,
+                "noun_33862_cc_orange.svg" ,
+                "noun_33862_cc_pink.svg"   ,
+                "noun_33862_cc_plum.svg"   ,
+                "noun_33862_cc_purple.svg" ,
+                "noun_33862_cc_red.svg"    ,
+                "noun_33862_cc_rose.svg"   ,
+                "noun_33862_cc_teal.svg"
+            ]}]
    }
 }
