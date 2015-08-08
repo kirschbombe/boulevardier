@@ -14,7 +14,14 @@ define([
       }
   }
   var siteConfig = {
-      "map" : { "config" : "/base/test/config/map.json" }
+        "map" : { "config" : "/base/test/config/map.json" }
+      , "markers" : {
+            "icons" : [
+                { "dir"   : "app/icons/",
+                    "files" : [
+                        "noun_33862_cc_aqua.svg"
+                    ]
+        }]}
   };
   var issueArgs = {
       config: { articles: {
