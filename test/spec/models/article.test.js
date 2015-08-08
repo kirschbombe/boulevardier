@@ -55,7 +55,7 @@ define([
     
         var article = new ArticleModel({path: path});
         article.init().done(function(art) {
-            var res = article.geojson();
+            var res = article.getGeojson();
             expect(_.isEqual(res, JSON.parse(geojsonFixture))).to.equal(true);
             done();
         });
