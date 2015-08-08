@@ -11,6 +11,7 @@ define('views/marker', [
         el: '',
         router: null,
         iconUrl: '',
+        popup: null,
         initialize: function(args) {
             var that = this;
             that.router = args.router;
@@ -19,6 +20,7 @@ define('views/marker', [
             that.model.on('active', function() {
                 var url = 'article/' + that.model.article.get('articleid');
                 that.router.navigate(url, {trigger: true});
+                that.trigger('active');
             });
         }
         , render: function() {

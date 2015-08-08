@@ -92,17 +92,9 @@ define('views/map', [
             map.invalidateSize();
             // track the currently open popup
             map.on('popupopen', function(evt) {
-                var popup, $popupWrap, popupLatLng, popupRightX, pad;
-                popup = evt.popup;
-                popupLatLng = popup.getLatLng();
-                // map should pan right/east if the popup balloon is covered by the article;
-                // pad is a slight relief between the popup and the article
-                $popupWrap = $(popup.getContent()).closest('.leaflet-popup-content-wrapper').first();
-                pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
-                pad = pad ? pad.x : 0;
-                popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
-                if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x)
-                    map.panBy([popupRightX - edgePtX,0]);
+                var popup = evt.popup;
+                var popupLatLng = popup.getLatLng();
+                that.handlePopupPosition(map,popup);
                 // event latency between leaflet and backbone appears to cause popups to collapse
                 // erratically in Firefox when clicking map pins
                 if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -119,6 +111,20 @@ define('views/map', [
                 }
             });
         }
+        , handlePopupPosition : function(map,popup) {
+            var edgePtX, $popupWrap, popupLatLng, popupRightX, pad;
+            popupLatLng = popup.getLatLng();
+            if (popupLatLng === undefined) return;
+            edgePtX = L.DomUtil.getViewportOffset(document.getElementById('article')).x;
+            // map should pan right/east if the popup balloon is covered by the article;
+            // pad is a slight relief between the popup and the article
+            $popupWrap = $(popup.getContent()).closest('.leaflet-popup-content-wrapper').first();
+            pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
+            pad = pad ? pad.x : 0;
+            popupRightX = $popupWrap.offset().left + $popupWrap.width() + pad;
+            if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x)
+                map.panBy([popupRightX - edgePtX,0]);
+        }
         , addMarkerToLayer: function(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconUrl) {
             var that        = this;
             var geojson     = markerModel.get('json');
@@ -128,6 +134,9 @@ define('views/map', [
                 , iconUrl   : iconUrl
                 , iconTitle : geojson.properties.layer
             });
+            markerView.on('active', function() {
+                that.handlePopupPosition(map,markerView.popup);
+            });
             markerView.render();
             L.geoJson(geojson, {
                 // feature is the geojson, a raw JS object
@@ -135,6 +144,7 @@ define('views/map', [
                 onEachFeature: function (feature, mapMarker) {
                     // add the popup to this marker
                     var popup = L.popup(mapconfig.features.popup);
+                    markerView.popup = popup;
                     popup.setContent(markerView.el);
                     mapMarker.bindPopup(popup);
                     // override the default click handler for the

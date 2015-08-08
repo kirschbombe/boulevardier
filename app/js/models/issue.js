@@ -72,7 +72,8 @@ define('models/issue', [
             {
                 return;
             } else {
-                if (this.get('activeArticle')) this.get('activeArticle').unselect();
+                if (this.get('activeArticle'))
+                    this.get('activeArticle').unselect();
                 that.set('activeArticle', art);
             }
             // this involves async initialization

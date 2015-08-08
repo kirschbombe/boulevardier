@@ -30,7 +30,6 @@ define('models/article', [
               "xml"       : null    // Document
             , "placeType" : null
             , "iconUrl"   : ''
-            , "active"    : false
         },
         select: function() {
             this.trigger('active');
