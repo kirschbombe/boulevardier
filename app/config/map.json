@@ -57,7 +57,6 @@
             "autoPanPadding" : [5, 5]
         },
         "icon" : {
-            "iconUrl" : "icons/noun_5091_cc.svg",
             "iconSize" : [32, 37],
             "iconAnchor" : [17, 36],
             "popupAnchor" : [-1, -32],
