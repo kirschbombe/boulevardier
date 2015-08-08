@@ -41,14 +41,6 @@
 -->
 
     <xsl:template name="header">
-
-        <style type="text/css">
-            img.article-marker {
-                height: 36px;
-                cursor: pointer;
-            }
-        </style>
-
         <p class="heading"><xsl:call-template name="handle-note"/></p>
         <h1 class="article-title">
             <xsl:apply-templates select="//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
