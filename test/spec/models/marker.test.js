@@ -33,7 +33,12 @@ define([
               }
           };
           var marker = new MarkerModel({article: article, issue: issue});
-          var markerView = new MarkerView({model:marker, router: router});
+          var markerView = new MarkerView({
+            model     : marker, 
+            router    : router,
+            iconTitle : '', 
+            iconUrl   : ''
+          });
           issue.on('select', function(art) {
             expect(art === article).to.equal(true);
             done();
@@ -59,7 +64,12 @@ define([
               }
           };
           var marker = new MarkerModel({article: article, issue: issue});
-          var markerView = new MarkerView({model:marker, router: router});
+          var markerView = new MarkerView({
+            model     : marker, 
+            router    : router,
+            iconTitle : '', 
+            iconUrl   : ''
+          });
           marker.on('active', function() { 
             expect(true).to.equal(true); 
             done();
@@ -85,7 +95,12 @@ define([
               }
           };
           var marker = new MarkerModel({article: article, issue: issue});
-          var markerView = new MarkerView({model:marker, router: router});
+          var markerView = new MarkerView({
+            model     : marker, 
+            router    : router,
+            iconTitle : '', 
+            iconUrl   : ''
+          });
           window.setTimeout(function() {
               marker.trigger('active');
           }, eventLatency);
