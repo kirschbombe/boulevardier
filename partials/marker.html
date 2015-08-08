@@ -1,4 +1,9 @@
 <div id="marker-popup-<%= articleid %>">
-    <h4><%= geojson.properties.markername %></h4>
+    <h4 class="popup">
+        <span><%= geojson.properties.markername %></span>
+        <span class="icon">
+            <img class="icon" data-toggle="popover" data-placement="top" data-trigger="hover" src="<%= iconUrl %>" data-content="<%= iconTitle %>"></img>
+        </span>
+    </h4>
     <div><%= geojson.properties.text %></div>
 </div>

@@ -11,9 +11,11 @@
 
     <!-- url of the image directory, relative to the base-url of the index.html page -->
     <xsl:param name="article-dir"/>
+    <xsl:param name="iconUrl"/>
+    <xsl:param name="cid"/>
 
     <xsl:template match="/">
-        <article class="before-footer article-content">
+        <article id="{$cid}" class="before-footer article-content">
             <header id="header">
                 <xsl:call-template name="header"/>
             </header>
@@ -42,7 +44,7 @@
         <p class="heading"><xsl:call-template name="handle-note"/></p>
         <h1 class="article-title">
             <xsl:apply-templates select="//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
-            <span class="glyphicon glyphicon-expand"></span>
+            <img class="article-marker" src="{$iconUrl}"></img>
         </h1>
         <p class="byline"><xsl:text>par </xsl:text><xsl:call-template name="handle-byline"/>
             <xsl:text> </xsl:text>
