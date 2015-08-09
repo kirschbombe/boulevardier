@@ -51,7 +51,7 @@ define('views/article', [
                 }
             }
             that.$el.find('.article-marker').click(function(i,elt) {
-                that.model.select();
+                that.model.toggle();
             }).hover(
                 function(evt) {
                     $('.leaflet-control-layers.leaflet-control').addClass('leaflet-control-layers-expanded');
