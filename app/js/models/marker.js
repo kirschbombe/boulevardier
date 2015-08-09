@@ -19,6 +19,9 @@ define('models/marker', [
                 that.listenTo(that.article, 'active', function() {
                     that.trigger('active')
                 });
+                that.listenTo(that.article, 'toggle', function() {
+                    that.trigger('toggle')
+                });
             });
         }
     });

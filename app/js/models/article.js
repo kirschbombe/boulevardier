@@ -37,6 +37,9 @@ define('models/article', [
         unselect: function() {
             this.trigger('inactive');
         },
+        toggle: function() {
+            this.trigger('toggle');
+        },
         geojson: null,
         getGeojson: function() {
             if (this.geojson === null)

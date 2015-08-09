@@ -143,6 +143,9 @@ define('views/map', [
             markerView.on('active', function() {
                 that.handlePopupPosition(map,markerView.popup);
             });
+            markerView.on('toggle', function(){
+                markerView.mapMarker.togglePopup();
+            });
             markerView.render();
             L.geoJson(geojson, {
                 // feature is the geojson, a raw JS object
@@ -151,6 +154,7 @@ define('views/map', [
                     // add the popup to this marker
                     var popup = L.popup(mapconfig.features.popup);
                     markerView.popup = popup;
+                    markerView.mapMarker = mapMarker;
                     popup.setContent(markerView.el);
                     mapMarker.bindPopup(popup);
                     // override the default click handler for the

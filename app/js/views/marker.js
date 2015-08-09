@@ -12,6 +12,7 @@ define('views/marker', [
         router: null,
         iconUrl: '',
         popup: null,
+        mapMarker: null,
         legendClass: '',
         initialize: function(args) {
             var that = this;
@@ -23,6 +24,9 @@ define('views/marker', [
                 var url = 'article/' + that.model.article.get('articleid');
                 that.router.navigate(url, {trigger: true});
                 that.trigger('active');
+            });
+            that.model.on('toggle', function() {
+                that.trigger('toggle');
             });
         }
         , render: function() {
