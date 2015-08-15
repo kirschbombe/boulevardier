@@ -60,12 +60,14 @@ define('views/map', [
                     });
                     layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
                 });
-                L.control.layers(null, layerGroups, mapconfig.control.layers.options).addTo(map);
-                // enable each layer; TODO: determine if this is configurable
-                $('input.leaflet-control-layers-selector').each(function(i,elt){
-                   $(elt).click();
-                });
+                that.addLayerControl(layerGroups,mapconfig.control.layers.options,map);
                 that.$def.resolve(that);
+            });
+        }
+        , addLayerControl : function (layerGroups,options,map) {
+            L.control.layers(null, layerGroups, options).addTo(map);
+            $('input.leaflet-control-layers-selector').each(function(i,elt) {
+               $(elt).click();
             });
         }
         , configureMap : function(map,mapconfig,openpopup,popupid,markers) {
@@ -137,8 +139,6 @@ define('views/map', [
             var markerView  = new MarkerView({
                   model     : markerModel
                 , router    : that.router
-                , iconUrl   : iconUrl
-                , iconTitle : geojson.properties.layer
             });
             markerView.on('active', function() {
                 that.handlePopupPosition(map,markerView.popup);
