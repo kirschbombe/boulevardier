@@ -60,12 +60,36 @@ define('views/map', [
                     });
                     layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
                 });
-                L.control.layers(null, layerGroups, mapconfig.control.layers.options).addTo(map);
-                // enable each layer; TODO: determine if this is configurable
-                $('input.leaflet-control-layers-selector').each(function(i,elt){
-                   $(elt).click();
-                });
+                that.addLayerControl(layerGroups,mapconfig.control.layers.options,map);
                 that.$def.resolve(that);
+            });
+        }
+        , addLayerControl : function (layerGroups,options,map) {
+            // HACK: override default Leaflet DOM event handling during configuration
+            // of the layer control for mouseover and mouseout
+            var mapOn = map.on;
+            var domEventOn = L.DomEvent.on;
+            map.on = function(types, fn, context) {
+                var f2 = (types === 'click')
+                    ? function() {
+                        debugger;
+                        fn();
+                    }
+                    : fn;
+                mapOn(types, f2, context);
+                return map;
+            }
+            L.DomEvent.on = function(obj, type, fn, context) {
+                if (type !== 'mouseover' && type !== 'mouseout')
+                    domEventOn(obj, type, fn, context);
+                return L.DomEvent;
+            };
+            L.control.layers(null, layerGroups, options).addTo(map);
+            L.DomEvent.on = domEventOn;
+            map.on = mapOn;
+            // enable each layer; TODO: determine if this is configurable
+            $('input.leaflet-control-layers-selector').each(function(i,elt) {
+               $(elt).click();
             });
         }
         , configureMap : function(map,mapconfig,openpopup,popupid,markers) {
