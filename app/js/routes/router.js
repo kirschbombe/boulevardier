@@ -6,33 +6,36 @@ define('routes/router', [
     , 'models/error/user'
     , 'views/error/user'
     , 'views/clear'
-    , 'views/issue'
-    , 'views/map'
+    , 'controllers/issue'
+    , 'controllers/map'
     , 'views/menu'
-], function($,_,Backbone,UserErrorModel,UserErrorView,ClearView,IssueView,MapView,MenuView) {
+], function($,_,Backbone,UserErrorModel,UserErrorView,ClearView,IssueController,MapController,MenuView) {
     'use strict';
     var Router = Backbone.Router.extend({
-        pages   : {},   // config for supported pages
-        config  : {},   // global site configuration, i.e., site.json
-        issue   : null, // IssueModel for this app
-        mapView : null, // MapView
-        initialize: function(opts) {
+          pages   : {}   // config for supported pages
+        , config  : {}   // global site configuration, i.e., site.json
+        , issueController : null // IssueModel for this app
+        , mapController   : null
+        , initialize: function(opts) {
             var that    = this;
             this.config = opts.config;
             this.pages  = opts.config.pages;
-            this.issue  = opts.issue;
-            this.issue.init().done(function() {
+            this.issueController = new IssueController({
+                  router: this
+                , config: this.config 
+            });
+            this.issueController.init().done(function() {
                 // pages.router.history = true by default, if missing
                 if (_.has(that.pages.router,'history') && !!that.pages.router.history) {
                     Backbone.history.start();
                 }
             });
-        },
-        navigate: function(fragment,options) {
+        }
+        , navigate: function(fragment,options) {
             if (Backbone.history.fragment === fragment) return;
             Backbone.history.navigate(fragment,options);
-        },
-        page: function(page) {
+        }
+        , page: function(page) {
             var that = this;
             var pageConfig;
             try {
@@ -48,7 +51,7 @@ define('routes/router', [
                 var viewName;
                 var args = {
                       config: that.config
-                    , issue:  that.issue
+                    , issue:  that.issueController.model
                     , router: that
                 };
                 // clone config to avoid global changes
@@ -65,39 +68,47 @@ define('routes/router', [
                 } else {
                     throw new Error('Unsupported page type in router: ' + page);
                 }
-                require([viewName], function(View) {
-                    var v = new View(args);
-                    if (viewName === 'views/map') that.mapView = v;
-                    v.render();
-                });
+                if (viewName === 'views/map') {
+                    if (that.mapController === null) {
+                        that.mapController = new MapController(args);
+                    } else {
+                        that.mapController.init().done(function(){
+                            that.mapController.view.render();
+                        });
+                    }
+                } else {
+                    require([viewName], function(View) {
+                        var v = new View(args);
+                        v.render();
+                    });
+                }
             });
-        },
-        article : function(id) {
+        }
+        , article : function(id) {
             var that = this;
             var args = {
                   config: that.config
-                , issue:  that.issue
+                , issue:  that.issueController.model
                 , router: that
             };
             if ($('#titlepage').length > 0) {
                 $('#titlepage').remove();
             }
-            if ($('#issue').length === 0) {
-                var isv = new IssueView(args);
-                isv.render();
-            }
-            if ($('#map').length === 0) {
-                that.mapView = new MapView(args);
-                that.mapView.render();
+            if (that.mapController === null) {
+                that.mapController = new MapController(args);
+            } else {
+                that.mapController.init().done(function() {
+                    //that.mapController.view.render();
+                });
             }
             if ($('#menu').children().length === 0) {
-                var mnv = new MenuView(args);
-                mnv.render();
+                new MenuView(args).render();
             }
             // select the article indicated by the url's route only after
             // the map has initialized
-            $.when.apply({},[that.mapView.init()]).done(function() {
-                that.issue.trigger('select', id);
+            that.mapController.init().done(function() {
+                var article = that.issueController.model.getArticle(id); 
+                article.trigger('active', article);
            });
         }
     });

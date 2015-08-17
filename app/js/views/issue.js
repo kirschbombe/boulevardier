@@ -12,25 +12,19 @@ define('views/issue', [
         template:   _.template(tmpl),
         initialize: function(args) {
             var that = this;
-            that.model = args.issue;
-            that.model.on('update', function(article) {
-                that.select(article);
-            });
+            that.config = args.config;
         },
         render: function () {
             this.$el.remove();
             $('body').append(tmpl);
         },
-        select: function(article) {
-            var that = this;
-            var av = new ArticleView({
+        renderArticle: function(article) {
+            new ArticleView({
                   model:  article
-                , config: that.model.config
-                , issue:  that
-                , router: that.model.router
-            });
-            article.on('active',   av.render, av);
-            article.on('inactive', av.remove, av);
+                , config: this.model.config
+                , issue:  this
+                , router: this.model.router
+            }).render();
         }
     });
     return IssueView;

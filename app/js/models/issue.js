@@ -29,58 +29,56 @@ define('models/issue', [
                 });
             });
             var inits = _.map(articles, function(article){return article.init();});
-            // NOTE: .fail() is not called; failure is handled in .always()
-            $.when({},inits).fail(function() {
-                that.$def.reject();
-            });
             $.when.apply(null,inits).done(function() {
                 col.add(articles);
-                that.on('select', function(article) {
-                    that._selectArticle(article);
-                });
+                that.setIcons();
                 that.$def.resolve(that);
-            });
-            $.when.apply(null,inits).always(function() {
+            }).always(function() {
                 _.forEach(inits, function($promise){
                     if ($promise.state() === 'rejected')
                         that.$def.reject();
                 });
-                that.$def.resolve(that);
+                that.$def.reject(); // not re-set on failure
             });
-        },
-        defaults: {
-            "activeArticle" : null
-        },
-        // show an article and the corresponding pin
-        // article may be either an index into the collection
-        // (e.g., when provided by a url) or an ArticleModel
-        // (e.g., when selected by a map marker)
-        _selectArticle: function(article) {
+        }
+        // map marker icons filename values are set here; icon colors are assigned
+        // randomly, so to support a consistency between the color and the place-type
+        // layer, they must be assigned as a group
+        , setIcons: function() {
             var that = this;
-            var col = that.get('collection');
+            var icconfig  = that.config.markers.icons;
+            var iconFiles = _.shuffle(_.flatten(
+                _.map(icconfig, function(entry) {
+                    return _.map(entry.files, function(file) {
+                        return entry.dir.concat(file);
+                    });
+                })
+            ));
+            var defaultIconFile = iconFiles.pop();
+            var icons = [];
+            // do map marker icon initialization; this seems like it should
+            // be isolated to the MapView or MarkerView, but is data used
+            // elsewhere in the application, so they are assigned here
+            that.get('collection').forEach(function(article,i) {
+                var geojson = (article.getGeojson() || {"properties":{}});
+                var layer = geojson.properties.layer;
+                icons[layer] = icons[layer] || iconFiles.pop() || defaultIconFile;
+                article.set('iconUrl', icons[layer]);
+            });
+        }
+        // return article object corresponding to argument;
+        // argument may be either an index into the collection
+        // (e.g., when provided by a url) or an ArticleModel
+        // (e.g., when selected by a map marker) 
+        , getArticle: function(article) {
             var art;
+            var col = this.get('collection');
             if (typeof article === 'object') {
                 art = article;
             } else if (typeof article === 'number' || typeof article === 'string') {
                 art = col.at(article);
-            } else {
-                throw "Bad argument to models/issue";
             }
-            // avoid un- and re-rendering an already-viewed article
-            if ((this.get('activeArticle') !== null) &&
-                (this.get('activeArticle') ==  article))
-            {
-                return;
-            } else {
-                if (this.get('activeArticle'))
-                    this.get('activeArticle').unselect();
-                that.set('activeArticle', art);
-            }
-            // this involves async initialization
-            art.init().done(function() {
-                that.trigger('update', art);
-                art.select();
-            });
+            return art;
         }
     });
     _.extend(IssueModel.prototype,AsyncInit);
