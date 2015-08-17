@@ -29,8 +29,6 @@ define('controllers/issue', [
                         var url = 'article/' + article.get('articleid');
                         that.router.navigate(url, {trigger: true});
                         that.view.renderArticle(article);
-                        //that.trigger('active');
-                        //that.handlePopupPosition(map,markerView.popup);
                     });
                 });
                 that.$def.resolve(that);

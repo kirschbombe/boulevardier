@@ -6,13 +6,16 @@ define('controllers/map', [
     , 'controllers/prototype'
     , 'models/map'
     , 'views/map'
-    , 'mixins/asyncInit'    
-], function($,_,Backbone,Controller,MapModel,MapView,AsyncInit) {
+    , 'mixins/asyncInit'
+    , 'controllers/map/pan'
+    , 'controllers/map/layer'
+], function($,_,Backbone,Controller,MapModel,MapView,AsyncInit,MapPanController,MapLayerController) {
     'use strict';
     var MapController = Controller.extend({
           model: null
         , view:  null
         , issue: null
+        , mapPanController : null
         , initialize: function(args) {
             var that = this;
             that.$def = $.Deferred();
@@ -24,11 +27,24 @@ define('controllers/map', [
                 , router: that.router
                 , issue: that.issue
             });
+            that.model.init().done(function() {
+            });
             that.view.init().done(function() {
+                that.mapPanController = new MapPanController({
+                    map: that.view.map
+                });
+                that.mapLayerController = new MapLayerController({
+                      views : that.view.markerViews
+                    , map   : that.view.map
+                    , mapconfig: that.model.attributes.mapconfig
+                });                
                 that.listenTo(that.view, 'markers', function(markerViews){
                     that._registerMarkers(markerViews);
+                    that.mapPanController.fitMarkerBounds(that.view.markerViews);
                 });
                 that.view.render();
+            });
+            $.when.apply(null,[that.model.init(), that.view.init()]).done(function() {
                 that.$def.resolve(that);
             });
         }
@@ -37,9 +53,15 @@ define('controllers/map', [
             _.forEach(markerViews, function(markerView) {
                 that.listenTo(markerView.model, 'active', function(article) {
                     that.mapPopupOpen(markerView.markerLayer);
+                    var marker = that._getMarkerLayer(markerView.markerLayer, 'getPopup');
+                    if (marker !== null)
+                        that.mapPanController.handlePopupPosition(marker.getPopup());
                 });
                 that.listenTo(markerView.model, 'toggle', function(article) {
                     that.mapPopupToggle(markerView.markerLayer);
+                    var marker = that._getMarkerLayer(markerView.markerLayer, 'getPopup');
+                    if (marker !== null)
+                        that.mapPanController.handlePopupPosition(marker.getPopup());
                 });
                 that.listenTo(markerView, 'click', function(evt) {
                     that.mapPopupOpen(evt);
@@ -52,32 +74,34 @@ define('controllers/map', [
                 });
             });
         }
-        , _getMarkerLayer : function(obj) {
-            var mapMarkerLayer;
+        , _getMarkerLayer : function(obj,method) {
+            var mapMarkerLayer, layers;
             if (obj instanceof L.LayerGroup) {
-                mapMarkerLayer = obj;
+                if (method in obj) {
+                    mapMarkerLayer = obj;
+                } else {
+                    layers = obj.getLayers();
+                    while (obj = layers.pop()) {
+                        if (method in obj) {
+                            mapMarkerLayer = obj;
+                            break;
+                        }
+                    }
+                }
             } else if (_.has(obj, 'originalEvent')) {
                 mapMarkerLayer = obj.target;
             }
             return mapMarkerLayer;
         }
         , mapPopupOpen: function(obj) {
-            var mapMarkerLayer = this._getMarkerLayer(obj);
-            // event latency between leaflet and backbone appears to cause popups to collapse
-            // erratically in Firefox when clicking map pins
-            if (navigator.userAgent.indexOf('Firefox') != -1) {
-                mapMarkerLayer.openPopup();
-            } else {
-                mapMarkerLayer.openPopup();
-            }
+            var mapMarkerLayer = this._getMarkerLayer(obj, 'openPopup');
+            if (!mapMarkerLayer) return;
+            mapMarkerLayer.openPopup();
         }
         , mapPopupToggle: function(obj) {
-            var mapMarkerLayer = this._getMarkerLayer(obj);
-            if (navigator.userAgent.indexOf('Firefox') != -1) {
-                mapMarkerLayer.togglePopup();
-            } else {
-                mapMarkerLayer.togglePopup();
-            }
+            var mapMarkerLayer = this._getMarkerLayer(obj, 'togglePopup');
+            if (!mapMarkerLayer) return;
+            mapMarkerLayer.togglePopup();
         }
     });
     _.extend(MapController.prototype,AsyncInit);

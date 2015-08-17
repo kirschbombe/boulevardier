@@ -1,49 +1,37 @@
 /*global define*/
 define('controllers/map/layer', [
-    'jquery',
-    'underscore',
-    'backbone'
-], function($,_,Backbone) {
+      'jquery'
+    , 'underscore'
+    , 'backbone'
+    , 'controllers/prototype'
+    , 'text!partials/marker-legend.html'
+], function($,_,Backbone,Controller,legendPartial) {
     'use strict';
-    var MapLayerController = _.extend({}, Backbone.Events);
-    _.extend(MapLayerController, {
-          model  : null
-        , views  : null
+    var MapLayerController  = Controller.extend({
+          views  : null
         , router : null
+        , map    : null
         , initialize: function(args) {
-            debugger;
-            // do per-marker map configuration
-            col.forEach(function(markerModel) {
-                var geojson = (markerModel.get('json') || {"properties":{}});
-                var layer = geojson.properties.layer;
-                var iconConfig = mapconfig.features.icon;
-                iconConfig.iconUrl = (markerModel.get('iconUrl') || '');
-                var icon = L.icon(iconConfig);
-                that.addMarkerToLayer(markerModel,map,openpopup,popupid,mapconfig,layerMarkers,icon,iconConfig.iconUrl);
+            var that = this;
+            that.views = args.views;
+            that.map = args.map;
+            that.mapconfig = args.mapconfig;            
+            var legendTempl = _.template(legendPartial);
+            var layerMarkers = _.groupBy(that.views, function(markerView){
+                return markerView.model.getGeojson().properties.layer;
             });
-            // add marker layers
+            var control = L.control.layers(null, null, that.mapconfig.control.layers.options).addTo(that.map);            
             _.each(_.keys(layerMarkers), function(layerName) {
                 var klass = layerName.replace(/\s+/g, '-');
                 var layerLegend = legendTempl({
-                      iconUrl: that.model.get('iconUrls')[layerName]
+                      iconUrl: layerMarkers[layerName][0].model.get('iconUrl')
                     , title  : layerName
                     , klass  : klass
                 });
-                layerGroups[layerLegend] = L.layerGroup(layerMarkers[layerName]);
+                var markerLayers = _.map(layerMarkers[layerName], function(view){ return view.markerLayer; });
+                var layer = L.layerGroup(markerLayers);
+                control.addOverlay(layer,layerLegend);
             });
-            that.addLayerControl(layerGroups,mapconfig.control.layers.options,map);
-            // add mapmarker to layer by layer type
-            if (_.has(layerMarkers, geojson.properties.layer)) {
-                layerMarkers[geojson.properties.layer].push(mapMarker);
-            } else {
-                layerMarkers[geojson.properties.layer] = [mapMarker];
-            }
-        }
-        , addView: function(view) {
-            this.views.push(view);
-        }
-        , addLayerControl : function (layerGroups,options,map) {
-            L.control.layers(null, layerGroups, options).addTo(map);
             $('input.leaflet-control-layers-selector').each(function(i,elt) {
                $(elt).click();
             });

@@ -20,11 +20,10 @@ define('views/article', [
             if (that.$el.find('#' + that.model.cid).length !== 0)
                 return;
             var html = this.xml2html(
-                this.model.get('xml'),
-                xsl, {
-                      "article-dir": that.config.articles.pathBase
-                    , "iconUrl"    : that.model.get('iconUrl')
-                    , "cid"        : that.model.cid
+                this.model.get('xml'), xsl, 
+                {"article-dir": that.config.articles.pathBase
+                , "iconUrl"    : that.model.get('iconUrl')
+                , "cid"        : that.model.cid
                 }
             );
             try {
@@ -40,7 +39,7 @@ define('views/article', [
                 $('article').removeClass('before-footer').addClass('no-footer');
             }
             that.$el.find('.article-marker').click(function(i,elt) {
-                that.model.toggle();
+                that.model.trigger('toggle', that.model);
             });
             return that;
         },

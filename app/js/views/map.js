@@ -23,15 +23,17 @@ define('views/map', [
                 that.mapconfig = that.model.get('mapconfig');
                 if ($('#' + this.id).length > 0) return;
                 if ($('#' + this.id).children().length > 0) return;
-                that._initMap();
+                that._initMap();                
                 that.$def.resolve(that);
             });
         }
         , _initMap : function() {
             var that = this;
-            if ($('#' + this.id).length === 0) { 
+            if ($('#' + this.id).length === 0) {
                 $('body').append(mapPartial);
                 that.map = new L.Map(that.mapconfig.id, that.mapconfig.map);
+                new L.TileLayer(that.mapconfig.tileLayer.url, that.mapconfig.tileLayer.opts).addTo(that.map);
+                new L.control.scale(that.mapconfig.scale).addTo(that.map);                
                 that.markerViews = _.map(that.issue.get('collection').models, function(article) {
                     return new MarkerView({
                           model     : article
@@ -44,15 +46,8 @@ define('views/map', [
         , render: function() {
             var that = this;
             that._initMap();
-            new L.TileLayer(that.mapconfig.tileLayer.url, that.mapconfig.tileLayer.opts).addTo(that.map);
-            new L.control.scale(that.mapconfig.scale).addTo(that.map);                
             _.forEach(that.markerViews, function(mv) { mv.render() });
-            var bounds = L.latLngBounds(_.map(that.issue.get('collection').models,function(article) {
-                return L.latLng(article.getGeojson().geometry.coordinates.slice(0).reverse());
-            }));
             that.trigger('markers', that.markerViews);
-            that.map.fitBounds(bounds);
-            that.map.invalidateSize();
         }
     });
     _.extend(MapView.prototype,AsyncInit);

@@ -38,6 +38,7 @@ define('routes/router', [
         , page: function(page) {
             var that = this;
             var pageConfig;
+            var mapPage = false;
             try {
                 if (!page) page = this.pages.home;
                 pageConfig = this.pages.pages[page];
@@ -45,8 +46,7 @@ define('routes/router', [
             } catch (e) {
                 return this.page('404');
             }
-            // clear the <body>
-            (new ClearView()).render();
+            new ClearView().render();
             _.each(pageConfig, function(pc) {
                 var viewName;
                 var args = {
@@ -69,13 +69,8 @@ define('routes/router', [
                     throw new Error('Unsupported page type in router: ' + page);
                 }
                 if (viewName === 'views/map') {
-                    if (that.mapController === null) {
-                        that.mapController = new MapController(args);
-                    } else {
-                        that.mapController.init().done(function(){
-                            that.mapController.view.render();
-                        });
-                    }
+                    that.mapController = new MapController(args);
+                    mapPage = true;
                 } else {
                     require([viewName], function(View) {
                         var v = new View(args);
@@ -83,6 +78,7 @@ define('routes/router', [
                     });
                 }
             });
+            if (!mapPage) that.mapController = null;
         }
         , article : function(id) {
             var that = this;
@@ -94,12 +90,11 @@ define('routes/router', [
             if ($('#titlepage').length > 0) {
                 $('#titlepage').remove();
             }
+            if ($('#page').length > 0) {
+                $('#page').remove();
+            }
             if (that.mapController === null) {
                 that.mapController = new MapController(args);
-            } else {
-                that.mapController.init().done(function() {
-                    //that.mapController.view.render();
-                });
             }
             if ($('#menu').children().length === 0) {
                 new MenuView(args).render();
