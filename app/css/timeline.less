@@ -1,0 +1,38 @@
+
+svg, g, rect {
+    transform-origin: 0px 0px 0px;
+}
+
+#timeline-container {
+  height: 500px;
+  width: 100px;
+  background-color: #fafafa;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+  border-radius: 5px;
+
+    #timeline {
+      background-color: #fafafa;
+      border-radius: 5px;
+    }
+    #axis {
+      fill: #808080;
+      font-family: sans-serif;
+      font-size: 10px;
+    }
+    #axis line,
+    #axis path {
+      stroke-width: 1;
+      stroke: grey;
+      shape-rendering: crispEdges;
+    }
+    #brush .extent {
+      stroke: gray;
+      fill: blue;
+      fill-opacity: .1;
+    }
+    rect.timeline-item {
+      fill: #0C3077;
+      visibility: visible;
+      opacity: 1.0;
+    }
+}

@@ -7,7 +7,7 @@ define('controllers/map/layer', [
     , 'text!partials/marker-legend.html'
 ], function($,_,Backbone,Controller,legendPartial) {
     'use strict';
-    var MapLayerController  = Controller.extend({
+    var MapLayerController = Controller.extend({
           views  : null
         , router : null
         , map    : null

@@ -2,7 +2,10 @@ require.config({
   paths: {
       backbone  : '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min'
     , bootstrap : '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min'
-    , d3        : '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min'
+    //, d3        : '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min'
+    
+    , d3        : '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3'
+    
     , jquery    : '//code.jquery.com/jquery-2.1.4.min'
     //, leaflet   : '//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet'
     

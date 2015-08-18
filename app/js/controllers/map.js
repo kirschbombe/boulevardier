@@ -9,13 +9,16 @@ define('controllers/map', [
     , 'mixins/asyncInit'
     , 'controllers/map/pan'
     , 'controllers/map/layer'
-], function($,_,Backbone,Controller,MapModel,MapView,AsyncInit,MapPanController,MapLayerController) {
+    , 'controllers/map/timeline'
+], function($,_,Backbone,Controller,MapModel,MapView,AsyncInit,MapPanController,MapLayerController,MapTimelineController) {
     'use strict';
     var MapController = Controller.extend({
           model: null
         , view:  null
         , issue: null
         , mapPanController : null
+        , MapLayerController : null
+        , mapTimelineController : null
         , initialize: function(args) {
             var that = this;
             that.$def = $.Deferred();
@@ -27,8 +30,6 @@ define('controllers/map', [
                 , router: that.router
                 , issue: that.issue
             });
-            that.model.init().done(function() {
-            });
             that.view.init().done(function() {
                 that.mapPanController = new MapPanController({
                     map: that.view.map
@@ -37,7 +38,12 @@ define('controllers/map', [
                       views : that.view.markerViews
                     , map   : that.view.map
                     , mapconfig: that.model.attributes.mapconfig
-                });                
+                });
+                that.mapTimelineController = new MapTimelineController({
+                      markerViews : that.view.markerViews
+                    , map         : that.view.map
+                    , siteconfig  : that.model.attributes.config
+                });                                
                 that.listenTo(that.view, 'markers', function(markerViews){
                     that._registerMarkers(markerViews);
                     that.mapPanController.fitMarkerBounds(that.view.markerViews);
@@ -56,6 +62,12 @@ define('controllers/map', [
                     var marker = that._getMarkerLayer(markerView.markerLayer, 'getPopup');
                     if (marker !== null)
                         that.mapPanController.handlePopupPosition(marker.getPopup());
+                });
+                that.listenTo(markerView.model, 'show', function(article) {
+                    
+                });
+                that.listenTo(markerView.model, 'hide', function(article) {
+                    
                 });
                 that.listenTo(markerView.model, 'toggle', function(article) {
                     that.mapPopupToggle(markerView.markerLayer);
@@ -102,6 +114,11 @@ define('controllers/map', [
             var mapMarkerLayer = this._getMarkerLayer(obj, 'togglePopup');
             if (!mapMarkerLayer) return;
             mapMarkerLayer.togglePopup();
+        }
+        , mapPopupClose: function(obj) {
+            var mapMarkerLayer = this._getMarkerLayer(obj, 'closePopup');
+            if (!mapMarkerLayer) return;
+            mapMarkerLayer.closePopup();
         }
     });
     _.extend(MapController.prototype,AsyncInit);
