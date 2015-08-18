@@ -23,7 +23,6 @@ define('views/timeline', [
                     on: { brushend: function(a) { that.handleFilter(a); }}
                 });
                 that.timeline.addData(that.model);
-                that.timeline.addTo(that.map);
             });
         }
         , handleFilter : function(selected) {

@@ -43,6 +43,21 @@ define('views/map', [
                 });
             }
         }
+        , renewViews : function() {
+            var that = this;
+            that.markerViews = _.map(that.issue.get('collection').models, function(article) {
+                if (!article.markerView) {
+                    article.markerView = new MarkerView({
+                          model     : article
+                        , map       : that.map
+                        , mapconfig : that.mapconfig
+                    });
+                }
+                return article.markerView;
+            });
+            _.forEach(that.markerViews, function(mv) { mv.render() });
+            that.trigger('markers', that.markerViews);
+        }
         , render: function() {
             var that = this;
             that._initMap();

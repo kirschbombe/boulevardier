@@ -86,14 +86,19 @@
                 .on('brushend', function(){
                     var extStart = yScale(brush.extent()[0]);
                     var extEnd   = yScale(brush.extent()[1]);
-                    var incl = [];
+                    var results = {
+                          clear: false
+                        , selected : []
+                    };
                     if (extStart !== extEnd) {
                         d3.select('#band').selectAll('rect.timeline-item').each(function(i){
                             if ((yScale(i.start) <= extEnd) && (yScale(i.end)   >= extStart))
-                                incl.push(i);
+                                results.selected.push(i);
                         });
-                        that.options.on.brushend(incl);
+                    } else {
+                        results.clear = true;
                     }
+                    that.options.on.brushend(results);
                 });
 
             var yBrush = band.append('svg')

@@ -36,21 +36,28 @@ define('controllers/map/timeline', [
                 , map   : that.map
                 , markerViews : args.markerViews
             });
-            // @selected is an array of MapTimelineItem's
+            // results.clear is a flag that the brush is empty
+            // results.incl is an array of MapTimelineItem's
             // trigger show/hide on lists of ArticleModel's
-            that.listenTo(that.view, 'filter', function(selected){
-                var showModels, hideModels;
-                var showIds = {};
-                showModels = _.map(selected, function(item) {
-                    var article = item.markerView.model;
-                    showIds[article.cid] = undefined;
-                    return article;
-                });
-                hideModels = _.filter(that.markerViews, function(markerView) {
-                    return !(markerView.model.cid in showIds);
-                });
-                this.trigger('hide', hideModels)
-                this.trigger('show', showModels);
+            that.listenTo(that.view, 'filter', function(results) {
+                var showModels, hideModels, showIds = {};
+                if (results.clear) {
+                    showModels = _.map(that.markerViews, function(markerView) {
+                        return markerView.model;
+                    });
+                    this.trigger('show', showModels);
+                } else {
+                    showModels = _.map(results.selected, function(item) {
+                        var article = item.markerView.model;
+                        showIds[article.cid] = undefined;
+                        return article;
+                    });
+                    hideModels = _.filter(that.markerViews, function(markerView) {
+                        return !(markerView.model.cid in showIds);
+                    });
+                    this.trigger('hide', hideModels)
+                    //this.trigger('show', showModels);
+                }
             });
             that.view.render();
         }

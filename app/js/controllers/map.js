@@ -44,6 +44,7 @@ define('controllers/map', [
                     , map         : that.view.map
                     , siteconfig  : that.model.attributes.config
                 });                                
+                that._registerTimelineListeners();
                 that.listenTo(that.view, 'markers', function(markerViews){
                     that._registerMarkers(markerViews);
                     that.mapPanController.fitMarkerBounds(that.view.markerViews);
@@ -63,12 +64,6 @@ define('controllers/map', [
                     if (marker !== null)
                         that.mapPanController.handlePopupPosition(marker.getPopup());
                 });
-                that.listenTo(markerView.model, 'show', function(article) {
-                    
-                });
-                that.listenTo(markerView.model, 'hide', function(article) {
-                    
-                });
                 that.listenTo(markerView.model, 'toggle', function(article) {
                     that.mapPopupToggle(markerView.markerLayer);
                     var marker = that._getMarkerLayer(markerView.markerLayer, 'getPopup');
@@ -83,6 +78,20 @@ define('controllers/map', [
                     if (!that.view.map.hoverPopup) return;
                     if (openpopup[popupid(mapMarker.getLatLng())]) return;
                     mapMarker.openPopup();
+                });
+            });
+        }
+        , _registerTimelineListeners : function() {
+            var that = this;
+            that.listenTo(that.mapTimelineController, 'show', function(articles) {
+                that.view.renewViews();
+                _.forEach(articles, function(article) {
+                    that.view.map.addLayer(article.markerLayer);
+                });                
+            });
+            that.listenTo(that.mapTimelineController, 'hide', function(articles) {
+                _.forEach(articles, function(article) {
+                    that.view.map.removeLayer(article.markerLayer);
                 });
             });
         }
