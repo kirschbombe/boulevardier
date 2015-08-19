@@ -1,10 +1,14 @@
 
 .leaflet-control-timeline.leaflet-control-timeline-expanded {
-  height: 500px;
-  width: 100px;
-  background-color: #fafafa;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-  border-radius: 5px;
+    height: 500px;
+    width: 100px;
+    background-color: #fafafa;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    border-radius: 5px;
+
+    .leaflet-control-timeline-toggle {
+        display: none;
+    }
 
     #timeline {
       background-color: #fafafa;
@@ -32,20 +36,20 @@
       opacity: 1.0;
     }
 }
-.leaflet-control-timeline {
+.leaflet-control-timeline.leaflet-control-timeline-collapsed {
 	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
 	background: #fff;
 	border-radius: 5px;
     width: 36px;
     height: 36px;
     .leaflet-control-timeline-toggle {
+        display: inline-block;
         width: 36px;
         height: 36px;
-    	background-image: url(http://cdn.leafletjs.com/leaflet-0.7.3/images/layers.png);
+        background-color     : transparent;
+        background-image     : url(../icons/timeline.png);
+        background-repeat    : no-repeat;
+        background-attachment: 0;
+        background-position  : 50% 50%;
 	}
-}
-.leaflet-control-timeline-expanded {
-    .leaflet-control-timeline-toggle {
-        display: none;
-    }
 }
