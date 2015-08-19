@@ -1,5 +1,5 @@
 
-#timeline-container {
+.leaflet-control-timeline.leaflet-control-timeline-expanded {
   height: 500px;
   width: 100px;
   background-color: #fafafa;
@@ -30,5 +30,22 @@
       fill: #0C3077;
       visibility: visible;
       opacity: 1.0;
+    }
+}
+.leaflet-control-timeline {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+    width: 36px;
+    height: 36px;
+    .leaflet-control-timeline-toggle {
+        width: 36px;
+        height: 36px;
+    	background-image: url(http://cdn.leafletjs.com/leaflet-0.7.3/images/layers.png);
+	}
+}
+.leaflet-control-timeline-expanded {
+    .leaflet-control-timeline-toggle {
+        display: none;
     }
 }

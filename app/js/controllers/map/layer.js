@@ -20,7 +20,16 @@ define('controllers/map/layer', [
             var layerMarkers = _.groupBy(that.views, function(markerView){
                 return markerView.model.getGeojson().properties.layer;
             });
-            var control = L.control.layers(null, null, that.mapconfig.control.layers.options).addTo(that.map);            
+            var control = L.control.layers(null, null, that.mapconfig.control.layers.options).addTo(that.map);
+            // disable mouseover/mouseout events for this control, which are set by default in 
+            // Leaflet; enables 'click' control
+            var container = control.getContainer();
+            _.forEach(Object.keys(container), function(key){
+                if (key.match('mouseover'))
+                    container.removeEventListener('mouseover', container[key]);
+                if (key.match('mouseout'))
+                    container.removeEventListener('mouseout', container[key]);
+            });
             _.each(_.keys(layerMarkers), function(layerName) {
                 var klass = layerName.replace(/\s+/g, '-');
                 var layerLegend = legendTempl({
