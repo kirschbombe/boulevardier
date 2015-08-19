@@ -55,7 +55,7 @@ define('views/map', [
                 }
                 return article.markerView;
             });
-            _.forEach(that.markerViews, function(mv) { mv.render() });
+            _.forEach(that.markerViews, function(mv) { mv.render(); });
             that.trigger('markers', that.markerViews);
         }
         , render: function() {

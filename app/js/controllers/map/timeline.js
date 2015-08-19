@@ -43,20 +43,19 @@ define('controllers/map/timeline', [
                 var showModels, hideModels, showIds = {};
                 if (results.clear) {
                     showModels = _.map(that.markerViews, function(markerView) {
-                        return markerView.model;
+                        return markerView;
                     });
                     this.trigger('show', showModels);
                 } else {
                     showModels = _.map(results.selected, function(item) {
-                        var article = item.markerView.model;
-                        showIds[article.cid] = undefined;
-                        return article;
+                        showIds[item.markerView.model.cid] = undefined;
+                        return item.markerView;
                     });
                     hideModels = _.filter(that.markerViews, function(markerView) {
                         return !(markerView.model.cid in showIds);
                     });
-                    this.trigger('hide', hideModels)
-                    //this.trigger('show', showModels);
+                    if (hideModels.length > 0) this.trigger('hide', hideModels)
+                    if (showModels.length > 0) this.trigger('show', showModels);
                 }
             });
             that.view.render();

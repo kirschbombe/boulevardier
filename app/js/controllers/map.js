@@ -83,15 +83,19 @@ define('controllers/map', [
         }
         , _registerTimelineListeners : function() {
             var that = this;
-            that.listenTo(that.mapTimelineController, 'show', function(articles) {
-                that.view.renewViews();
-                _.forEach(articles, function(article) {
-                    that.view.map.addLayer(article.markerLayer);
-                });                
+            that.listenTo(that.mapTimelineController, 'show', function(markerViews) {
+                _.forEach(markerViews, function(markerView) {
+                    if (markerView.markerLayer) {
+                        markerView.render();
+                    } else {
+                        that.view.map.addLayer(markerView.markerLayer);
+                    }
+                });
             });
-            that.listenTo(that.mapTimelineController, 'hide', function(articles) {
-                _.forEach(articles, function(article) {
-                    that.view.map.removeLayer(article.markerLayer);
+            that.listenTo(that.mapTimelineController, 'hide', function(markerViews) {
+                _.forEach(markerViews, function(markerView) {
+                    if (markerView.markerLayer)
+                        that.view.map.removeLayer(markerView.markerLayer);
                 });
             });
         }
