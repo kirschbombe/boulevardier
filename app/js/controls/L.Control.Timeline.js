@@ -1,12 +1,7 @@
-(function (root, plugin) {
-	if (typeof define === 'function' && define.amd) {
-		define(['leaflet','d3'], plugin);
-	} else if (typeof exports === 'object') {
-		module.exports = plugin;
-	} else {
-		plugin(root.L);
-	}
-}(this, function (L,d3) {
+define('controls/L.Control.Timeline', [
+      'leaflet'
+    , 'd3'
+], function (L,d3) {
     if (L.Control.Timeline) return L;
     L.Control.Timeline = L.Control.extend({
           options: {
@@ -134,4 +129,4 @@
     L.control.timeline = function(options) {
         return new L.Control.Timeline(options);
     };
-}));
+});
