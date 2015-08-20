@@ -1,16 +1,16 @@
 /*global define */
 /* jshint expr:true */
 define([
-      'collections/markers'
+      'collections/timeline'
     , 'backbone'
-], function (MarkersCollection) {
+], function (TimelineCollection) {
   'use strict';
   describe('"Testing collections/markers constructor & init"', function () {
       it('expect constructor to be a function',function(){
-        expect(MarkersCollection).to.be.a('function');
+        expect(TimelineCollection).to.be.a('function');
       });
       it('expect collection to be an object',function(){
-        var col = new MarkersCollection();
+        var col = new TimelineCollection();
         expect(col).to.be.an('object');
       });
   });
