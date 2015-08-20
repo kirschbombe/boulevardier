@@ -8,16 +8,41 @@ define('controls/L.Control.Timeline', [
                 orientation: 'left'
               , height: 500
               , width: 100
-              , sel : '.leaflet-control-timeline'
-              , margin: { left: 3, right: 3, top: 10, bottom: 10 }
-              , collapsed: false
+              , margin: { left: 3, right: 3, top: 10, bottom: 5 }
+              , collapsed: true
               , item : {minHeight:1}
               , on : null // brushend: null
+              , title : 'Timeline'
+              , position: "topleft"
         }
-        , initialize : function(map, options) {
+        , initialize : function(map, source, options) {
+            var that = this;
             L.Util.setOptions(this, options);
             this._map = map;
-            this._container = d3.select(this.options.sel);
+            this._source = source;
+            var container = this._container = L.DomUtil.create('div','leaflet-control-timeline leaflet-control');
+            if (this.options.collapsed) {
+                L.DomUtil.addClass(container, 'leaflet-control-timeline-collapsed');
+                var toggle = this._toggle = L.DomUtil.create('a', 'leaflet-control-timeline-toggle', container);
+                toggle.title = this.options.title;
+                toggle.link = '#';
+                var expand = function() { that._expand(); };
+                if (L.Browser.touch) {
+                    L.DomEvent
+                        .on(toggle, 'click', L.DomEvent.stop)
+                        .on(toggle, 'click', expand, this);
+                } else {
+                    L.DomEvent.on(toggle, 'click', expand);
+                }
+            } else {
+                L.DomUtil.addClass(container, 'leaflet-control-timeline-expanded');
+            }
+            if (!L.Browser.touch) {
+                L.DomEvent.disableClickPropagation(this._container);
+            } else {
+                L.DomEvent.on(this._container, 'click', L.DomEvent.stopPropagation);
+            }
+            return container;
         }
         , onRemove: function() {
             // do any cleanup here
@@ -25,22 +50,17 @@ define('controls/L.Control.Timeline', [
         , onAdd: function(map) {
             return this._container;
         }
-        , addData: function(source) {
-            this._source = source;
-            this._items = source.getItems();
-        }
-        , expand: function() {
+        , _expand: function() {
             var that = this;
-            
             if (that._expanded) return;
             that._expanded = true;
+            this._map.on('click', this._collapse, this);
+
+            L.DomUtil.removeClass(this._container, 'leaflet-control-timeline-collapsed');
+            L.DomUtil.addClass(this._container, 'leaflet-control-timeline-expanded');
 
             var innerHeight = this.options.height - this.options.margin.top   - this.options.margin.bottom;
             var innerWidth  = this.options.width  - this.options.margin.right - this.options.margin.left;
-
-            that._handleTimelineMouseEvents();
-            L.DomUtil.removeClass(this._container[0][0], 'leaflet-control-timeline-collapsed');
-            L.DomUtil.addClass(this._container[0][0], 'leaflet-control-timeline-expanded');
 
             var xScale = this._xScale = d3.scale.linear()
                 .range([0,innerWidth]);
@@ -49,7 +69,7 @@ define('controls/L.Control.Timeline', [
                 .domain([this._source.start,this._source.end])
                 .range([0,innerHeight]);
 
-            var timeline = this._timeline = this._container
+            var timeline = this._timeline = d3.select('.leaflet-control-timeline')
                 .append('svg')
                 .attr('id', 'timeline')
                 .attr('height', this.options.height)
@@ -58,14 +78,14 @@ define('controls/L.Control.Timeline', [
             var band = timeline.append('g')
                 .attr('id','band')
                 .attr('width', (innerWidth/2 - this.options.margin.right))
-                .attr('height', innerHeight)                
-                .attr('transform', 
+                .attr('height', innerHeight)
+                .attr('transform',
                       'translate(' + .25*innerWidth + ',' + this.options.margin.top +  ')'
                     + ' scale(.75 1.0)'
                 );
 
             var items = band.selectAll('g')
-                .data(this._items)
+                .data(this._source.getItems())
                 .enter().append('rect')
                 .attr('class','timeline-item')
                 .attr('height', function(d) {
@@ -97,7 +117,7 @@ define('controls/L.Control.Timeline', [
                         results.clear = true;
                     }
                     that.options.on.brushend(results);
-                });
+                  });
 
             var yBrush = band.append('svg')
                 .attr('id','brush')
@@ -120,22 +140,16 @@ define('controls/L.Control.Timeline', [
             yAxis.call(axis);
         }
         , _collapse : function() {
+            if (!this._expanded) return;
             this.options.on.collapse(); // TODO: # d3.svg.brush() destructor?
-            this._container.select('svg').remove();
+            document.getElementById('timeline').remove();
             this._expanded = false;
-        }
-        , _handleTimelineMouseEvents : function() {
-            // prevent the map from being reachable by mouse events when 
-            // timeline is open
-            if (!L.Browser.touch) {
-                L.DomEvent.disableClickPropagation(this._container[0][0]);
-            } else {
-                L.DomEvent.on(this._container[0][0], 'click', L.DomEvent.stopPropagation);
-            }
-			this._map.on('click', this._collapse, this);
+            L.DomUtil.addClass(this._container, 'leaflet-control-timeline-collapsed');
+            L.DomUtil.removeClass(this._container, 'leaflet-control-timeline-expanded');
+            this._map.off('click', this._collapse, this);
         }
     });
-    L.control.timeline = function(map,options) {
-        return new L.Control.Timeline(map,options);
+    L.control.timeline = function(map,source,options) {
+        return new L.Control.Timeline(map,source,options);
     };
 });

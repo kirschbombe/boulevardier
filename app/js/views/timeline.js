@@ -17,29 +17,20 @@ define('views/timeline', [
         }
         , _timelineCollapse : function() {
             var that = this;
-            that.handleFilter({clear:true});
-            $('.leaflet-control-timeline')
-                .removeClass('leaflet-control-timeline-expanded')
-                .addClass('leaflet-control-timeline-collapsed');
+            that._handleFilter({clear:true});
+        }
+        , _handleFilter : function(selected) {
+            this.trigger('filter', selected);
         }
         , render: function() {
             var that = this;
-            $('.leaflet-top.leaflet-left').append(timelineControlPartial);
             that.model.init().done(function() {
-                that.timeline = L.control.timeline(that.map,
-                {   on: { brushend: function(a) { that.handleFilter(a);     }
-                        , collapse: function()  { that._timelineCollapse(); }
+                that.timeline = L.control.timeline(that.map,that.model,
+                    {   on: { brushend: function(a) { that._handleFilter(a);    }
+                            , collapse: function()  { that._timelineCollapse(); }
                     }
-                });
-                that.timeline.addData(that.model);
-                $('.leaflet-control-timeline.leaflet-control-timeline-collapsed').click(function(evt) {
-                    $(evt.target).removeClass('leaflet-control-timeline-collapsed');
-                    that.timeline.expand();
-                });
+                }).addTo(that.map);
             });
-        }
-        , handleFilter : function(selected) {
-            this.trigger('filter', selected);
         }
     });
     return TimelineView;
