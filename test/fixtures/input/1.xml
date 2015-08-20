@@ -15,8 +15,7 @@
                <bibl>
                   <author>Maupassant's</author>
                   <title>Bel-Ami</title>
-                  <!-- for narrative order: n refers to the chapter and paragraph - in this case, "3.12" is chapter 3, paragraph 12 -->
-                  <citedRange unit="chapter" n="3.12"/>
+                  <citedRange unit="chapter" n="2.1.114"/>
                </bibl>
             </relatedItem>
          </notesStmt>
@@ -34,17 +33,20 @@
             <p>Cependant, la ville ne cesse pas de s’industrialiser au détriment de l’agriculture, comptant une dizaine de nouvelles industries dans la deuximèe moitié du dix-neuvième siècle, y compris une manufacture d’articles de voyage de Louis Vuitton. En 1911, la population s’élève à 42.583 habitants, témoignant d’une augmentation très rapide (et aussi tardive) en plusieurs décennies seulement.</p>  
          </div>
       </body>
+     
       <back>
          <note type="mapmarker">
-            <placeName type="parks-rec">Asnières-sur-Seine</placeName>
+            <placeName type="Parks and Recreation">Asnières-sur-Seine</placeName>
             <geo>2.285369 48.914155</geo>
             <p>« Quand ils passèrent le pont d’Asnières, une gaieté les saisit à la vue de la rivière couverte de bateaux, de pêcheurs et de canotiers. Le soleil, un puissant soleil de mai, répandit sa lumière oblique sur lse embarcations et sur le fleuve calme qui semblait immobile, sans courant et sans remous, figé sous la chaleur et la clarté du jour finisant. Une barque à voile, au milieu de la rivière, ayant tendu sur ses deux bords deux grand triangles de toile blanche pour cueillir les moindres douffles de brise, avait l’air d’un énorme oiseau prêt à s’envoler. »</p>
          </note>
+         
          <div type="bibliography">
             <listBibl>
                <bibl></bibl>
             </listBibl>
          </div>
+         
          <div type="images">
             <figure xml:id="fig1">
                <graphic url="../images/asnieres1.jpg"/>

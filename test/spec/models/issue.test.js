@@ -1,16 +1,23 @@
 /*global define */
 define([
       'jquery'
-    , 'models/marker'
     , 'models/article'
     , 'models/issue'
-], function ($,MarkerModel,ArticleModel,IssueModel) {
+], function ($,ArticleModel,IssueModel) {
   'use strict';
   var issueArgs = {
       config: { articles: {
             pathBase: 'http://localhost:9876/base/test/fixtures/input'
           , files: ['1.xml']
-      }}
+      }
+      , "markers" : {
+            "icons" : [
+                { "dir"   : "app/icons/",
+                    "files" : [
+                        "noun_33862_cc_aqua.svg"
+                    ]
+        }]}
+      }
   };
   // amount of time for initialization before event handling can be
   // expected to work effectively
@@ -60,7 +67,7 @@ define([
             done();
           });
           window.setTimeout(function(){
-              issue.trigger('select', article);
+              issue.getArticle(0).trigger('active');
           },eventLatency);
       });
     });
@@ -69,17 +76,16 @@ define([
       var issue = new IssueModel(issueArgs);
       issue.init().then(function() {
           expect(issue.init().state()).to.equal('resolved');
-          
+
           var article = issue.get('collection').at(0);
           expect(article === undefined).to.equal(false);
-          
-          
+
           article.on('active', function() { 
             expect(true).to.equal(true);
             done();
           });
           window.setTimeout(function(){
-              issue.trigger('select', 0);
+              issue.getArticle(article).trigger('active');
           },eventLatency);
       });
     });

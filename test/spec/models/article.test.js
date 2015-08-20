@@ -33,7 +33,7 @@ define([
             done();
         });
         article.init().done(function(art) {
-            article.select();
+            article.trigger('active');
         });
     });
     
@@ -44,7 +44,7 @@ define([
             done();
         });
         article.init().done(function(art) {
-            article.unselect();
+            article.trigger('inactive');
         });
     });
     
