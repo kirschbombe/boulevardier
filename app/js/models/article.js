@@ -7,7 +7,8 @@ define('models/article', [
     , 'mixins/asyncInit'
     , 'mixins/xml2html'
     , 'text!xsl/geojson.xsl'
-], function($,_,Backbone,FetchXML,AsyncInit,XML2HTML,geoJsonXsl) {
+    , 'text!xsl/cited-range.xsl'
+], function($,_,Backbone,FetchXML,AsyncInit,XML2HTML,geoJsonXsl,citedRangeXsl) {
     'use strict';
     var ArticleModel = Backbone.Model.extend({
         initialize: function() {
@@ -17,6 +18,7 @@ define('models/article', [
             $.when($get).done(function(data) {
                 that.set('xml', data);
                 that._mkGeojson();
+                that._mkCitedRange();
                 if (that.geojson !== null)
                     that.set('placeType', that.geojson.properties.layer);
                 that.$def.resolve(that);
@@ -30,15 +32,7 @@ define('models/article', [
               "xml"       : null    // Document
             , "placeType" : null
             , "iconUrl"   : ''
-        },
-        select: function() {
-            this.trigger('active');
-        },
-        unselect: function() {
-            this.trigger('inactive');
-        },
-        toggle: function() {
-            this.trigger('toggle');
+            , "citedRange": {}
         },
         geojson: null,
         getGeojson: function() {
@@ -51,7 +45,15 @@ define('models/article', [
                 var jsonString = this.xml2html(this.get('xml'), geoJsonXsl, {}, 'text');
                 this.geojson = JSON.parse(jsonString);
             } catch (e) {
-                throw new Error("Failed to parse to json: " + e.toString());
+                throw new Error("Failed to parse geojson: " + e.toString());
+            }
+        },
+        _mkCitedRange: function() {
+            try {
+                var jsonString = this.xml2html(this.get('xml'), citedRangeXsl, {}, 'text');
+                this.set('citedRange', JSON.parse(jsonString));
+            } catch (e) {
+                throw new Error("Failed to parse cited range json: " + e.toString());
             }
         }
     });
