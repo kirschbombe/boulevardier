@@ -24,8 +24,10 @@ define('views/map/layer/timeline', [
         }
         , render: function() {
             var that = this;
-            var position, controlheight;
-            if ($('#map').height() === document.body.clientHeight/2) {
+            var position, controlheight, mapheight, documentheight;
+            mapheight = $('#map').height();
+            documentheight = document.body.clientHeight;
+            if (Math.abs(documentheight/2 - mapheight) < 2) {
                 position = 'bottomright';
                 controlheight = $('#map').height() - 100;
             } else {

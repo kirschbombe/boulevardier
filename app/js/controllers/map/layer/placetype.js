@@ -7,7 +7,7 @@ define('controllers/map/layer/placetype', [
     , 'text!partials/marker-legend.html'
 ], function($,_,Backbone,Controller,legendPartial) {
     'use strict';
-    var MapLayerController = Controller.extend({
+    var PlacetypeController = Controller.extend({
           views  : null
         , router : null
         , map    : null
@@ -16,13 +16,13 @@ define('controllers/map/layer/placetype', [
             var that = this;
             that.views = args.views;
             that.map = args.map;
-            that.mapconfig = args.mapconfig;            
+            that.mapconfig = args.mapconfig;
             var legendTempl = _.template(legendPartial);
             var layerMarkers = _.groupBy(that.views, function(markerView){
                 return markerView.model.getGeojson().properties.layer;
             });
             var control = that.control = L.control.layers(null, null, that.mapconfig.control.layers.options).addTo(that.map);
-            // disable mouseover/mouseout events for this control, which are set by default in 
+            // disable mouseover/mouseout events for this control, which are set by default in
             // Leaflet; enables 'click' control
             var container = control.getContainer();
             _.forEach(Object.keys(container), function(key){
@@ -31,6 +31,9 @@ define('controllers/map/layer/placetype', [
                 if (key.match('mouseout'))
                     container.removeEventListener('mouseout', container[key]);
             });
+            // in Safari, layer control button does not receive 'focus' event on click
+            
+            L.DomEvent.on($('.leaflet-control-layers-toggle')[0], 'click', control._expand, control);
             _.each(_.keys(layerMarkers), function(layerName) {
                 var klass = layerName.replace(/\s+/g, '-');
                 var layerLegend = legendTempl({
@@ -65,7 +68,7 @@ define('controllers/map/layer/placetype', [
     		control._handlingClick = true;
     		for (i = 0; i < inputsLen; i++) {
     			input = inputs[i];
-    			obj = control._layers[input.layerId];    
+    			obj = control._layers[input.layerId];
     			if (input.checked) {
     				obj.layer.getLayers().forEach(function(layer) {
     				    show.push(layer);
@@ -83,5 +86,5 @@ define('controllers/map/layer/placetype', [
     		control.mapLayerController.trigger('filter');
         }
     });
-    return MapLayerController;
+    return PlacetypeController;
 });
