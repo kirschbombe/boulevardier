@@ -1,11 +1,11 @@
 /*global define*/
-define('controllers/map/timeline', [
+define('controllers/map/layer/timeline', [
       'jquery'
     , 'underscore'
     , 'backbone'
     , 'controllers/prototype'
-    , 'views/timeline'
-    , 'models/timeline'
+    , 'views/map/layer/timeline'
+    , 'models/map/layer/timeline'
 ], function($,_,Backbone,Controller,TimelineView,TimelineModel) {
     'use strict';
     var MapTimelineController = Controller.extend({
@@ -39,26 +39,36 @@ define('controllers/map/timeline', [
             // results.clear is a flag that the brush is empty
             // results.incl is an array of MapTimelineItem's
             // trigger show/hide on lists of ArticleModel's
-            that.listenTo(that.view, 'filter', function(results) {
-                var showModels, hideModels, showIds = {};
-                if (results.clear) {
-                    showModels = _.map(that.markerViews, function(markerView) {
-                        return markerView;
-                    });
-                    this.trigger('show', showModels);
-                } else {
-                    showModels = _.map(results.selected, function(item) {
-                        showIds[item.markerView.model.cid] = undefined;
-                        return item.markerView;
-                    });
-                    hideModels = _.filter(that.markerViews, function(markerView) {
-                        return !(markerView.model.cid in showIds);
-                    });
-                    if (hideModels.length > 0) this.trigger('hide', hideModels)
-                    if (showModels.length > 0) this.trigger('show', showModels);
-                }
-            });
+            that.listenTo(that.view, 'filter', that._handleFilterEvent);
             that.view.render();
+        }
+        , _handleFilterEvent : function(results) {
+            var that = this;
+            var showLayers = [], hideLayers = [], showIds = {};
+            if (results.clear) {
+                showLayers = _.map(that.markerViews, function(markerView) {
+                    return markerView.markerLayer;
+                });
+            } else {
+                showLayers = _.map(results.selected, function(item) {
+                    showIds[item.markerView.model.cid] = undefined;
+                    return item.markerView.markerLayer;
+                });
+                hideLayers = _.map(_.filter(that.markerViews, function(markerView) {
+                    return !(markerView.model.cid in showIds);
+                }), function(markerView) {
+                    return markerView.markerLayer;
+                });
+            }
+            that.show = showLayers;
+            that.hide = hideLayers;
+            that.trigger('filter');
+        }
+        , getFilterState : function() {
+            return {
+                  show: (this.show || [])
+                , hide: (this.hide || [])
+            };
         }
     });
     return MapTimelineController;

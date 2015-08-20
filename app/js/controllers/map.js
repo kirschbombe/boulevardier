@@ -9,7 +9,6 @@ define('controllers/map', [
     , 'mixins/asyncInit'
     , 'controllers/map/pan'
     , 'controllers/map/layer'
-    , 'controllers/map/timeline'
 ], function($,_,Backbone,Controller,MapModel,MapView,AsyncInit,MapPanController,MapLayerController,MapTimelineController) {
     'use strict';
     var MapController = Controller.extend({
@@ -35,16 +34,11 @@ define('controllers/map', [
                     map: that.view.map
                 });
                 that.mapLayerController = new MapLayerController({
-                      views : that.view.markerViews
+                      view  : that.view
                     , map   : that.view.map
+                    , model : that.model
                     , mapconfig: that.model.attributes.mapconfig
                 });
-                that.mapTimelineController = new MapTimelineController({
-                      markerViews : that.view.markerViews
-                    , map         : that.view.map
-                    , siteconfig  : that.model.attributes.config
-                });                                
-                that._registerTimelineListeners();
                 that.listenTo(that.view, 'markers', function(markerViews){
                     that._registerMarkers(markerViews);
                     that.mapPanController.fitMarkerBounds(that.view.markerViews);
@@ -78,24 +72,6 @@ define('controllers/map', [
                     if (!that.view.map.hoverPopup) return;
                     if (openpopup[popupid(mapMarker.getLatLng())]) return;
                     mapMarker.openPopup();
-                });
-            });
-        }
-        , _registerTimelineListeners : function() {
-            var that = this;
-            that.listenTo(that.mapTimelineController, 'show', function(markerViews) {
-                _.forEach(markerViews, function(markerView) {
-                    if (markerView.markerLayer) {
-                        markerView.render();
-                    } else {
-                        that.view.map.addLayer(markerView.markerLayer);
-                    }
-                });
-            });
-            that.listenTo(that.mapTimelineController, 'hide', function(markerViews) {
-                _.forEach(markerViews, function(markerView) {
-                    if (markerView.markerLayer)
-                        that.view.map.removeLayer(markerView.markerLayer);
                 });
             });
         }

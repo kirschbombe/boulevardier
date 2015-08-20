@@ -5,15 +5,15 @@ define('controls/L.Control.Timeline', [
     if (L.Control.Timeline) return L;
     L.Control.Timeline = L.Control.extend({
           options: {
-                orientation: 'left'
-              , height: 500
-              , width: 100
-              , margin: { left: 3, right: 3, top: 10, bottom: 5 }
-              , collapsed: true
-              , item : {minHeight:1}
-              , on : null // brushend: null
-              , title : 'Timeline'
-              , position: "topleft"
+                orientation : 'left'
+              , height      : 500
+              , width       : 100
+              , margin      : { left: 3, right: 3, top: 10, bottom: 5 }
+              , collapsed   : true
+              , item        : {minHeight:1}
+              , on          : null
+              , title       : 'Timeline'
+              , position    : 'topleft'
         }
         , initialize : function(map, source, options) {
             var that = this;
@@ -58,6 +58,8 @@ define('controls/L.Control.Timeline', [
 
             L.DomUtil.removeClass(this._container, 'leaflet-control-timeline-collapsed');
             L.DomUtil.addClass(this._container, 'leaflet-control-timeline-expanded');
+
+            if (this._timeline) return;
 
             var innerHeight = this.options.height - this.options.margin.top   - this.options.margin.bottom;
             var innerWidth  = this.options.width  - this.options.margin.right - this.options.margin.left;
@@ -141,8 +143,9 @@ define('controls/L.Control.Timeline', [
         }
         , _collapse : function() {
             if (!this._expanded) return;
-            this.options.on.collapse(); // TODO: # d3.svg.brush() destructor?
-            document.getElementById('timeline').remove();
+            if  (this.options.on.collapse || typeof this.options.on.collapse === 'function') 
+                this.options.on.collapse();
+            //document.getElementById('timeline').remove();
             this._expanded = false;
             L.DomUtil.addClass(this._container, 'leaflet-control-timeline-collapsed');
             L.DomUtil.removeClass(this._container, 'leaflet-control-timeline-expanded');

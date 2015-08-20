@@ -4,45 +4,60 @@ define('controllers/map/layer', [
     , 'underscore'
     , 'backbone'
     , 'controllers/prototype'
-    , 'text!partials/marker-legend.html'
-], function($,_,Backbone,Controller,legendPartial) {
+    , 'controllers/map/layer/placetype'
+    , 'controllers/map/layer/timeline'
+], function($,_,Backbone,Controller,PlaceTypeController,TimelineController) {
     'use strict';
     var MapLayerController = Controller.extend({
-          views  : null
+          view   : null
         , router : null
         , map    : null
         , initialize: function(args) {
             var that = this;
-            that.views = args.views;
             that.map = args.map;
-            that.mapconfig = args.mapconfig;            
-            var legendTempl = _.template(legendPartial);
-            var layerMarkers = _.groupBy(that.views, function(markerView){
-                return markerView.model.getGeojson().properties.layer;
+            that.view = args.view;
+            that.model = args.model;
+            var placeTypeController = new PlaceTypeController({
+                  views : that.view.markerViews
+                , map   : that.view.map
+                , mapconfig: that.model.attributes.mapconfig
             });
-            var control = L.control.layers(null, null, that.mapconfig.control.layers.options).addTo(that.map);
-            // disable mouseover/mouseout events for this control, which are set by default in 
-            // Leaflet; enables 'click' control
-            var container = control.getContainer();
-            _.forEach(Object.keys(container), function(key){
-                if (key.match('mouseover'))
-                    container.removeEventListener('mouseover', container[key]);
-                if (key.match('mouseout'))
-                    container.removeEventListener('mouseout', container[key]);
+            var timelineController = new TimelineController({
+                  markerViews : that.view.markerViews
+                , map         : that.view.map
+                , siteconfig  : that.model.attributes.config
             });
-            _.each(_.keys(layerMarkers), function(layerName) {
-                var klass = layerName.replace(/\s+/g, '-');
-                var layerLegend = legendTempl({
-                      iconUrl: layerMarkers[layerName][0].model.get('iconUrl')
-                    , title  : layerName
-                    , klass  : klass
+            that.subControllers = [placeTypeController, timelineController];
+            _.forEach(that.subControllers, function(subController) {
+                that.listenTo(subController, 'filter', function() {
+                    that._updateMarkers()
                 });
-                var markerLayers = _.map(layerMarkers[layerName], function(view){ return view.markerLayer; });
-                var layer = L.layerGroup(markerLayers);
-                control.addOverlay(layer,layerLegend);
             });
-            $('input.leaflet-control-layers-selector').each(function(i,elt) {
-               $(elt).click();
+        }
+        // filter the visible map markers based on the placetype and the
+        // timeline layer controls; the "hide" state takes precedence if
+        // the controls disagree (i.e., a marker that is hidden on any
+        // control is hidden on the map)
+        , _updateMarkers: function() {
+            var that = this;
+            var show = [], hide = [];
+            _.forEach(that.subControllers, function(subController){
+                var res = subController.getFilterState();
+                hide.push(res.hide)
+                hide = _.flatten(hide);
+            });
+            _.forEach(that.view.markerViews, function(markerView) {
+                var found = _.find(hide, function(hiddenLayer) {
+                    hiddenLayer === markerView.markerLayer
+                });
+                if (!found)
+                    show.push(markerView.markerLayer);
+            });
+            _.forEach(show, function(markerLayer) {
+                that.view.map.addLayer(markerLayer);
+            });
+            _.forEach(hide, function(markerLayer) {
+                that.view.map.removeLayer(markerLayer);
             });
         }
     });

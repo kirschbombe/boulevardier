@@ -3,7 +3,7 @@ define('collections/timeline', [
     'jquery', 
     'underscore', 
     'backbone',
-    'models/timeline/item'
+    'models/map/layer/timeline/item'
 ], function($,_,Backbone,TimelineItemModel) {
     'use strict';
     var TimelineCollection = Backbone.Collection.extend({

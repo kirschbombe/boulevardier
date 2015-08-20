@@ -1,10 +1,10 @@
 /*global define */
-define('models/timeline', [
+define('models/map/layer/timeline', [
       'jquery'
     , 'underscore'
     , 'backbone'
     , 'collections/timeline'
-    , 'models/timeline/item'
+    , 'models/map/layer/timeline/item'
     , 'mixins/asyncInit'
 ], function($,_,Backbone,TimelineCollection,TimelineItem,AsyncInit) {
     'use strict';

@@ -1,5 +1,5 @@
 /*global define*/
-define('views/timeline', [
+define('views/map/layer/timeline', [
       'jquery'
     , 'underscore'
     , 'backbone'
@@ -26,10 +26,8 @@ define('views/timeline', [
             var that = this;
             that.model.init().done(function() {
                 that.timeline = L.control.timeline(that.map,that.model,
-                    {   on: { brushend: function(a) { that._handleFilter(a);    }
-                            , collapse: function()  { that._timelineCollapse(); }
-                    }
-                }).addTo(that.map);
+                    { on: { brushend: function(a) { that._handleFilter(a); }}}
+                ).addTo(that.map);
             });
         }
     });

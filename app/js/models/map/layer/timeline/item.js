@@ -1,5 +1,5 @@
 /*global define */
-define('models/timeline/item', [
+define('models/map/layer/timeline/item', [
       'jquery'
     , 'underscore'
     , 'backbone'
