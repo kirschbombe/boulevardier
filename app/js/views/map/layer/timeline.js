@@ -24,9 +24,19 @@ define('views/map/layer/timeline', [
         }
         , render: function() {
             var that = this;
+            var position, controlheight;
+            if ($('#map').height() === document.body.clientHeight/2) {
+                position = 'bottomright';
+                controlheight = $('#map').height() - 100;
+            } else {
+                position = 'topleft';
+                controlheight = 500;
+            }
             that.model.init().done(function() {
                 that.timeline = L.control.timeline(that.map,that.model,
-                    { on: { brushend: function(a) { that._handleFilter(a); }}}
+                    {     height   : controlheight
+                        , position : position
+                        , on: { brushend: function(a) { that._handleFilter(a); }}}
                 ).addTo(that.map);
             });
         }

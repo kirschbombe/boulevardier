@@ -1,7 +1,14 @@
 
 .leaflet-control-timeline.leaflet-control-timeline-expanded {
-    height: 500px;
-    width: 100px;
+
+    @media (max-width: @split-screen-min) {
+        height: 50%;
+        width: 100px;
+    }
+    @media (min-width: @split-screen-min) {
+        height: 500px;
+        width: 100px;
+    }
     background-color: #fafafa;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
     border-radius: 5px;
