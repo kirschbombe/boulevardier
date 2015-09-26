@@ -75,4 +75,13 @@
                 "noun_33862_cc_teal.svg"
             ]}]
     }
+    , "controls" : {
+        "timeline" : {
+          "enable" : false
+      }
+      , "placetype" : {
+          "enable" : true
+      }
+  }
+
 }

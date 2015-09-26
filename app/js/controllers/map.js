@@ -15,12 +15,14 @@ define('controllers/map', [
           model: null
         , view:  null
         , issue: null
+        , config: null
         , mapPanController : null
         , MapLayerController : null
         , mapTimelineController : null
         , initialize: function(args) {
             var that = this;
             that.$def = $.Deferred();
+            that.config = args.config;
             that.router = args.router;
             that.issue = args.issue;
             that.model = new MapModel(args);
@@ -38,6 +40,7 @@ define('controllers/map', [
                     , map   : that.view.map
                     , model : that.model
                     , mapconfig: that.model.attributes.mapconfig
+                    , controlsconfig: that.config.controls
                 });
                 that.listenTo(that.view, 'markers', function(markerViews){
                     that._registerMarkers(markerViews);

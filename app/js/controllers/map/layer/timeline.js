@@ -19,14 +19,6 @@ define('controllers/map/layer/timeline', [
             that.views = args.views;
             that.map = args.map;
             that.markerViews = args.markerViews;
-            _.forEach(args.markerViews, function(markerView){
-                that.listenTo(markerView.model, 'show', function() {
-                    debugger;
-                });
-                that.listenTo(markerView.model, 'hide', function() {
-                    debugger;
-                });
-            });
             that.model = new TimelineModel({
                   siteconfig  : args.siteconfig
                 , markerViews : args.markerViews

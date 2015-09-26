@@ -12,22 +12,28 @@ define('controllers/map/layer', [
           view   : null
         , router : null
         , map    : null
+        , controlsconfig : null
         , initialize: function(args) {
             var that = this;
             that.map = args.map;
             that.view = args.view;
             that.model = args.model;
-            var placeTypeController = new PlaceTypeController({
-                  views : that.view.markerViews
-                , map   : that.view.map
-                , mapconfig: that.model.attributes.mapconfig
-            });
-            var timelineController = new TimelineController({
-                  markerViews : that.view.markerViews
-                , map         : that.view.map
-                , siteconfig  : that.model.attributes.config
-            });
-            that.subControllers = [placeTypeController, timelineController];
+            that.controlsconfig = args.controlsconfig;
+            that.subControllers = [];
+            if (_.has(that.controlsconfig, 'placetype') && that.controlsconfig.placetype.enable) {
+                that.subControllers.push(new PlaceTypeController({
+                      views : that.view.markerViews
+                    , map   : that.view.map
+                    , mapconfig: that.model.attributes.mapconfig
+                }));
+            }
+            if (_.has(that.controlsconfig, 'timeline') && that.controlsconfig.timeline.enable) {
+                that.subControllers.push(new TimelineController({
+                      markerViews : that.view.markerViews
+                    , map         : that.view.map
+                    , siteconfig  : that.model.attributes.config
+                }));
+            }
             _.forEach(that.subControllers, function(subController) {
                 that.listenTo(subController, 'filter', function() {
                     that._updateMarkers()
