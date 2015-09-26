@@ -29,7 +29,7 @@
             </div>
         </body>
         <note type="mapmarker">
-            <placeName>Railroad Park</placeName>
+            <placeName type="Parks and Recreation">Railroad Park</placeName>
             <geo>-86.810144 33.509492</geo>
             <p>Railroad park is a 19-acre public park bewteen Birmingham's downtown and Southside neighborhood.</p>
         </note>
