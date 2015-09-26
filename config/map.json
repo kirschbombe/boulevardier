@@ -28,17 +28,21 @@
             "detectRetina" : true
         }
     },
-    "view" : {
-        "lat": 33.5094592,
-        "lng" : -86.8120584,
-        "zoom": 12
-    },
     "scale" : {
         "position" : "bottomleft",
         "maxWidth" : 100,
         "metric" : true,
         "imperial" : true,
         "updateWhenIdle" : false
+    },
+    "control" : {
+        "layers" : {
+            "options" : {
+                "autoZIndex" : true,
+                "collapsed"  : true,
+                "position"   : "topleft"
+            }
+        }
     },
     "geojson" : {
         "cache" : true
@@ -53,7 +57,6 @@
             "autoPanPadding" : [5, 5]
         },
         "icon" : {
-            "iconUrl" : "app/icons/noun_5091_cc.svg",
             "iconSize" : [32, 37],
             "iconAnchor" : [17, 36],
             "popupAnchor" : [-1, -32],

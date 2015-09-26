@@ -36,7 +36,7 @@
         <back>            
             <div type="images">
                 <figure xml:id="fig1">
-                    <graphic url="https://upload.wikimedia.org/wikipedia/commons/9/90/Railroad_park_bham.JPG" />
+                    <graphic url="../images/Railroad_park_bham.JPG" />
                     <head>Railroad Park seen from northwest corner</head>
                     <note type="attribution">Image courtesy of Wikipedia</note>
                 </figure>
