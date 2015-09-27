@@ -48,7 +48,7 @@
        "partial" : "partials/menu/page.html"     }
   ],
   "articles" : {
-    "pathBase"  : "example/articles/",
+    "pathBase"  : "articles/",
     "files"     : [
         "railroad-park.xml"
     ]
