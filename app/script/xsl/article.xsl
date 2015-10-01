@@ -46,7 +46,7 @@
             <xsl:apply-templates select="//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
             <img class="article-marker" src="{$iconUrl}"></img>
         </h1>
-        <p class="byline"><xsl:text>par </xsl:text><xsl:call-template name="handle-byline"/>
+        <p class="byline"><xsl:call-template name="handle-byline"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="handle-date"/>
         </p>
@@ -66,14 +66,7 @@
                     <span><xsl:value-of select="."/></span>
                 </xsl:when>
                 <xsl:when test="position() != 1">
-                    <xsl:choose>
-                        <xsl:when test="position() = last()">
-                            <span> et <xsl:value-of select="."/></span>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <span>, <xsl:value-of select="."/></span>
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <span>, <xsl:value-of select="."/></span>
                 </xsl:when>
             </xsl:choose>
         </xsl:for-each>
