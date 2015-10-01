@@ -7,7 +7,9 @@
     "type": "git",
     "url": "git@github.com:kirschbombe/mapsandtexts.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "gulp": "^3.9.0"
+  },
   "devDependencies": {
     "gulp": "3.8.11",
     "gulp-jshint": "1.10.0",
