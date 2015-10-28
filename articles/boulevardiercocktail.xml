@@ -44,9 +44,14 @@
         <back>            
             <div type="images">
                 <figure xml:id="fig1">
-                    <graphic url="../images/boulevardier1" />
+                    <graphic url="../images/boulevardier1.jpg" />
                     <head>The Boulevardier Cocktail</head>
                     <note type="attribution"><a href="https://www.flickr.com/photos/edsel_/16164913902">Photo via Flickr user Edsel Little</a></note>
+                </figure>
+                <figure xml:id="fig2">
+                    <graphic url="../images/boulevardier2.jpg" />
+                    <head>Harry's New York Bar, Paris</head>
+                    <note type="attribution"><a href="https://www.flickr.com/photos/kchrist/2893087153">Photo via Flickr user Kenn Wilson</a></note>
                 </figure>
             </div>
         </back>
