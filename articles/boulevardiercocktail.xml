@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title >Boulevardier: The Cocktail(Birmingham, AL)</title>
+                <author>Dawn Childress</author>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Dawn Childress & Nathan Day</publisher>
+                <date when="2014">October 2015</date>
+            </publicationStmt>
+            <notesStmt>
+                <relatedItem><bibl>Boulevardier project</bibl></relatedItem>
+            </notesStmt>
+            <sourceDesc><p>born digital</p></sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="article">
+                <p>"The boulevardier cocktail is similar to the Negroni, replacing the Negroni's gin component with bourbon whiskey or rye whiskey. Some boulevardier recipes call for 1 1/2 parts rather than 1 part whiskey."</p>
+                <p>"Drinks historian David Wondrich traces the easy-drinking combination of American whiskey, Campari and Italian vermouth back to Paris in 1927, where a wealthy young American expat named Erskine Gwynne launched a publication patterned after The New Yorker. His magazine, The Boulevardier, featured the first documented recipe for its namesake drink (although it didn’t specify the type of whiskey)."</p>
+                <p>"It’s a great in its de facto form, but I often find Campari a bit of a bully to softer whiskies, even at the modern recipe’s half up ratio of 2 parts whiskey to 1 of Campari. By cutting the 1 part of Campari in half, or even thirds, one can swap in dozens of other amari, or what are known as potable bitters, and create new versions of the drink ad infinitum. Try half an ounce of Campari with a quarter-ounce each of Amaro Ramazzotti and Zwack Hungarian bitter, with a swath of orange zest instead of the lemon. Or try thirds each of Campari, Cynar, the artichoke-based amaro and Braulio, a wonderful old Alpine bitter with a stark, piney grab that is brand new to the American market. Playtime is limited only by your patience and your budget. Add to those factors the variance in different whiskies and vermouths and you have a simple drink that can present you with new facets forever."</p>
+                <head>The Boulevardier</head>
+                2 ounces rye or bourbon<lb>
+                1 ounces Campari<lb>
+                1 ounce sweet vermouth<lb>
+                Stir ingredients together in a mixing glass filled with ice, strain into either a stemmed cocktail glass or a rocks glass with ice, to preference. Garnish with a twist of lemon zest.</p>
+            </div>
+            <div type="bibliography">
+                <listBibl>
+                    <bibl>"Boulevardier (Cocktail), Wikipedia.</bibl>
+                    <bibl>Cecchini, Toby. "Case Study | The Boulevardier", The New York Times, February 2, 2012.</bibl>
+                    <bibl>Japhe, Brad. "The Return of the Boulevardier, Our Favorite Manhattan-Negroni Love Child", LAWeekly, July 6, 2015.</bibl>
+                </listBibl>
+            </div>
+        </body>
+        <note type="mapmarker">
+            <placeName type="Food and Drink">Harry's New York Bar, Paris</placeName>
+            <geo>2.3322078999999576 48.869219</geo>
+            <p></p>
+        </note>
+        <back>            
+            <div type="images">
+                <figure xml:id="fig1">
+                    <graphic url="../images/Railroad_park_bham.JPG" />
+                    <head>Railroad Park seen from northwest corner</head>
+                    <note type="attribution">Image courtesy of Wikipedia</note>
+                </figure>
+            </div>
+        </back>
+    </text>
+</TEI>
