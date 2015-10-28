@@ -50,7 +50,7 @@
   }
 }
 #titlepage article {
-  background-color: #3a363f;
+  background-color: #116d86;
   color: #ffffff;
   height: 100%;
   width: 100%;
@@ -80,5 +80,10 @@
   padding-right: 1em;
   padding-left: 1em;
   text-align: center !important;
+}
+#titlepage a {
+    color: #bea72f;
+    text-decoration: none;
+    background-color: transparent
 }
 
