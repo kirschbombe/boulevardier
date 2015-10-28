@@ -50,7 +50,8 @@
   "articles" : {
     "pathBase"  : "articles/",
     "files"     : [
-        "railroad-park.xml"
+        "railroad-park.xml",
+        "boulevardiercocktail.xml"
     ]
    }
   , "markers" : {
