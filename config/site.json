@@ -16,6 +16,15 @@
                                             , "page" : "title.html" } }
                             , { "view"    : "views/menu"  }
                         ],
+                        "about"  : [
+                              { "view"    : "views/issue" }
+                            , { "view"    : "views/page" }
+                            , { "view"    : "views/menu"  }
+                            , { "partial" : { "el"   : "#article"
+                                            , "page" : "title.html" } }
+                            , { "partial" : { "el"   : "#page"
+                                            , "page" : "about.html" } }
+                        ],
                         "contrib"  : [
                               { "view"    : "views/issue" }
                             , { "view"    : "views/page" }
@@ -42,8 +51,14 @@
        "partial"    : "partials/menu/submenu.html",
        "item": {
             "href"  : "article/:i"              }},
+
     {  "type"    : "page",
-       "label"    : "Contributeurs",
+       "label"   : "About",
+       "href"    : "page/about",
+       "partial" : "partials/menu/page.html"     },
+
+    {  "type"    : "page",
+       "label"    : "Contributors",
        "href"    : "page/contrib",
        "partial" : "partials/menu/page.html"     }
   ],
