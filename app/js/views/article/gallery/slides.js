@@ -45,9 +45,11 @@ define('views/article/gallery/slides', [
                             , maxWidth:  $(".slidesjs-container").width()
                             , position:  "relative"
                         });
-                        var left = ($(".slidesjs-container").width() - $img.width())/2;
-                        left -= parseInt($img.css('padding-left'), 10);
-                        $img.css({ left: left });
+                        // calculate left offset once the previous properties have been set
+                        $img.css({
+                              left   : ($(".slidesjs-container").width() - $img.width())/2 - parseInt($img.css('padding-left'), 10)
+                            , margin : 0
+                        });
                         $img.css({ visibility: "visible" });
                     },
                     // called start of change of pic (after first)
