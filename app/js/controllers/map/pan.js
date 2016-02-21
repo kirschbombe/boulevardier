@@ -9,8 +9,10 @@ define('controllers/map/pan', [
     'use strict';
     var MapPanController = Controller.extend({
           map: null
+        , mapconfig: null
         , initialize: function(args) {
             this.map = args.map;
+            this.mapconfig = args.mapconfig;
             if (!this.map)
                 throw new Error("Uninitialized map");
         }
@@ -36,13 +38,15 @@ define('controllers/map/pan', [
             }
             that.map.invalidateSize();
         }
-        // adjust map pan/zoom to make all map markers occur to the 
+        // adjust map pan/zoom to make all map markers occur to the
         // left of div#article in wide mode
         , fitMarkerBounds : function(markerViews) {
             var that = this;
             var $def = $.Deferred();
             $def.then(function() {
-                that._fitMarkerBounds(markerViews);
+                if (!that.mapconfig.view) {
+                  that._fitMarkerBounds(markerViews);
+                }
             });
             this.watchDOM(1000,'#article',$def);
         }
@@ -59,7 +63,7 @@ define('controllers/map/pan', [
             $popupWrap = $('#' + id).closest('.leaflet-popup-content-wrapper').first();
             pad = L.point(popup.options.autoPanPaddingBottomRight || popup.options.autoPanPadding);
             pad = pad ? pad.x : 0;
-            popupRightX = ($popupWrap.length > 0) 
+            popupRightX = ($popupWrap.length > 0)
                 ? $popupWrap.offset().left + $popupWrap.width() + pad
                 : 0;
             if (edgePtX != 0 && popupRightX > edgePtX && edgePtX != map.getSize().x) {

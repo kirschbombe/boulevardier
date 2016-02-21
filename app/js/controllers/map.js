@@ -33,7 +33,8 @@ define('controllers/map', [
             });
             that.view.init().done(function() {
                 that.mapPanController = new MapPanController({
-                    map: that.view.map
+                      map: that.view.map
+                    , mapconfig: that.model.attributes.mapconfig
                 });
                 that.mapLayerController = new MapLayerController({
                       view  : that.view

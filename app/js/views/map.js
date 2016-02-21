@@ -7,7 +7,9 @@ define('views/map', [
     , 'text!partials/map.html'
     , 'views/marker'
     , 'mixins/asyncInit'
-], function($,_,Backbone,L,mapPartial,MarkerView,AsyncInit) {
+    , 'models/error/user'
+    , 'views/error/user'
+], function($,_,Backbone,L,mapPartial,MarkerView,AsyncInit,UserErrorModel,UserErrorView) {
     'use strict';
     var MapView = Backbone.View.extend({
           id:      'map'
@@ -32,6 +34,18 @@ define('views/map', [
             if ($('#' + this.id).length === 0) {
                 $('body').append(mapPartial);
                 that.map = new L.Map(that.mapconfig.id, that.mapconfig.map);
+                if (that.mapconfig.view) {
+                  try {
+                    that.map.setView(
+                        new L.LatLng(that.mapconfig.view.lat, that.mapconfig.view.lng)
+                      , that.mapconfig.view.zoom
+                    );
+                  } catch (e) {
+                    new UserErrorView({model: new UserErrorModel({
+                        message: 'Leaflet reports bad data in map.json file. ' + e.toString()
+                    })});
+                  }
+                }
                 new L.TileLayer(that.mapconfig.tileLayer.url, that.mapconfig.tileLayer.opts).addTo(that.map);
                 new L.control.scale(that.mapconfig.scale).addTo(that.map);                
                 that.markerViews = _.map(that.issue.get('collection').models, function(article) {
