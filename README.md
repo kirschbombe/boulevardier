@@ -95,4 +95,4 @@ The dropdown menu for the site is configured as a list of items in the site conf
 Each of these items, having item type "page" or "menu", correspond to a label/href pair to be reachable by the application. Note that the "href" value is taken to be a page fragment and not a full URL. For example, the href value "about" would result in the menu item causing a load of "http://localhost/boulevardier/index.html#about".
 
 ## Development
-To modify or extend Boulevardier, please refer to this wiki page: [Boulevardier development](https://github.com/kirschbombe/boulevardier/wiki/developing).
+To modify or extend Boulevardier, please refer to this wiki page: [Boulevardier development](https://github.com/kirschbombe/boulevardier/wiki/development).
