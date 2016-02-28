@@ -1,4 +1,4 @@
-**Boulevardier** is an application for publishing TEI-encoded literary documents with associated geographic data to the web. The [Literary Paris](http://kirschbombe.github.io/literaryparis/) page uses it to publish content from the PSU course of the same name, and its [gh-pages](https://github.com/kirschbombe/literaryparis/tree/gh-pages) branch may be consulted for M&T usage and site configuration.
+**Boulevardier** is an application for publishing TEI-encoded literary documents with associated geographic data to the web. The [Mapping Maupassant's _Bel-Ami_](http://kirschbombe.github.io/literaryparis/) page uses it to publish content from the PSU course of the same name, and its [gh-pages](https://github.com/kirschbombe/literaryparis/tree/gh-pages) branch may be consulted for M&T usage and site configuration.
 
 [![Build Status](https://travis-ci.org/rnathanday/boulevardier.svg?branch=master)](https://travis-ci.org/rnathanday/boulevardier)
 
@@ -96,4 +96,3 @@ Each of these items, having item type "page" or "menu", correspond to a label/hr
 
 ## Development
 To modify or extend Boulevardier, please refer to this wiki page: [Boulevardier development](https://github.com/kirschbombe/boulevardier/wiki/developing).
-
