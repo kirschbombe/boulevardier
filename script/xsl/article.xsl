@@ -100,6 +100,12 @@
         </xsl:if>
     </xsl:template>
 
+    <xsl:template match="tei:emph">
+        <em>
+            <xsl:apply-templates/>
+        </em>
+    </xsl:template>
+
     <xsl:template match="tei:q">
         <p class="pullquote">
             <xsl:apply-templates/>
