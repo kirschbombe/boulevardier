@@ -18,7 +18,7 @@
         "zoomControl" : true
     },
     "tileLayer" : {
-        "url" : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png",
+        "url" : "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.png",
         "opts" : {
             "minZoom" : 0,
             "maxZoom" : 15,
