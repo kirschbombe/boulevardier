@@ -4,7 +4,7 @@ require.config({
     , bootstrap : '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min'
     , d3        : '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min'
     , jquery    : '//code.jquery.com/jquery-2.1.4.min'
-    , leaflet   : '//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet'
+    , leaflet   : '//unpkg.com/leaflet@0.7.3/dist/leaflet'
     , lightbox  : '//cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/jquery.magnific-popup.min'
     , slidesjs  : '//cdnjs.cloudflare.com/ajax/libs/slidesjs/3.0/jquery.slides.min'
     , text      : '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min'
