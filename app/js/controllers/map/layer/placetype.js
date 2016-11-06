@@ -4,8 +4,10 @@ define('controllers/map/layer/placetype', [
     , 'underscore'
     , 'backbone'
     , 'controllers/prototype'
+    , 'models/error/user'
+    , 'views/error/user'
     , 'text!partials/marker-legend.html'
-], function($,_,Backbone,Controller,legendPartial) {
+], function($,_,Backbone,Controller,UserErrorModel,UserErrorView,legendPartial) {
     'use strict';
     var PlacetypeController = Controller.extend({
           views  : null
@@ -42,8 +44,16 @@ define('controllers/map/layer/placetype', [
                     , klass  : klass
                 });
                 var markerLayers = _.map(layerMarkers[layerName], function(view){ return view.markerLayer; });
-                var layer = L.layerGroup(markerLayers);
-                control.addOverlay(layer,layerLegend);
+                try {
+                    var layer = L.layerGroup(markerLayers);
+                    control.addOverlay(layer,layerLegend);
+                } catch (e) {
+                    new UserErrorView({
+                        model: new UserErrorModel({
+                            msg: e.toString()
+                        })
+                    })
+                }
             });
             $('input.leaflet-control-layers-selector').each(function(i,elt) {
                $(elt).click();

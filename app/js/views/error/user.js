@@ -1,7 +1,7 @@
 /*global define*/
 define('views/error/user', [
     'jquery', 
-    'backbone', 
+    'backbone',
     'text!partials/error/user.html'
 ], function($,Backbone,tmpl) {
     'use strict';
@@ -12,8 +12,10 @@ define('views/error/user', [
             this.render();
         },
         render: function () {
-            this.$el.html(this.template(this.model.attributes));
-            this.$el.modal({keyboard: true, show: true});
+            if (this.$el.html && this.$el.modal) {
+                this.$el.html(this.template(this.model.attributes));
+                this.$el.modal({keyboard: true, show: true});
+            }
             return this;
         }
     });

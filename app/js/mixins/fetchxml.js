@@ -18,7 +18,7 @@ define('mixins/fetchxml', [
                      $get.resolve(data);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    $get.reject();
+                    $get.reject(textStatus);
                 }
             });
             return $get.promise();

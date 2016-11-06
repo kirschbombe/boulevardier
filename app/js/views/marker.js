@@ -3,9 +3,12 @@ define('views/marker', [
       'jquery'
     , 'underscore'
     , 'backbone'
+    , 'models/error/user'
+    , 'views/error/user'
     , 'text!partials/marker.html'
     , 'text!partials/marker-legend.html'
-], function($,_,Backbone,tmpl,legendPartial) {
+    , 'mixins/asyncInit'
+], function($,_,Backbone,UserErrorModel,UserErrorView,tmpl,legendPartial,AsyncInit) {
     'use strict';
     var MarkerView = Backbone.View.extend({
           template: _.template(tmpl)
@@ -15,9 +18,23 @@ define('views/marker', [
         , mapconfig: null
         , initialize: function(args) {
             var that = this;
+            that.$def = $.Deferred();
             that.map = args.map;
             that.mapconfig = args.mapconfig;
-            that.initMarkerLayer();
+            try {
+                that.initMarkerLayer();
+                if (that.markerLayer) {
+                    that.$def.resolve(that);
+                } else {
+                    throw "Failed to initialize marker layer."
+                }
+            } catch (e) {
+                new UserErrorView({
+                    model: new UserErrorModel({
+                        msg: e.toString()
+                    })
+                })
+            }
         }
         , initMarkerLayer : function() {
             var that    = this;
@@ -59,8 +76,24 @@ define('views/marker', [
             });
         }
         , render: function() {
-            this.markerLayer.addTo(this.map);
+            var that = this;
+            try {
+                if (this.markerLayer) {
+                    this.markerLayer.addTo(this.map);
+                } else {
+                    var article = that.model.get('path');
+                    throw "map marker layer is undefined for article '"
+                        + article + "'. Check lat/lng values in file."
+                }
+            } catch (e) {
+                new UserErrorView({
+                    model: new UserErrorModel({
+                        msg: "Error adding marker layer: " + e.toString()
+                    })
+                })
+            }
         }
     });
+    _.extend(MarkerView.prototype,AsyncInit);
     return MarkerView;
 });
