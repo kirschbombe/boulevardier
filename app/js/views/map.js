@@ -25,8 +25,23 @@ define('views/map', [
                 that.mapconfig = that.model.get('mapconfig');
                 if ($('#' + this.id).length > 0) return;
                 if ($('#' + this.id).children().length > 0) return;
-                that._initMap();                
-                that.$def.resolve(that);
+                try {
+                    that._initMap();
+                    if (that.markerViews) {
+                        var markerViewInits = _.map(that.markerViews, function(i) { i.$def });
+                        $.when.apply({}, markerViewInits).done(function(){
+                            that.$def.resolve(that);
+                        });
+                    } else {
+                        throw "undefined marker views.";
+                    }
+                } catch (e) {
+                    new UserErrorView({
+                        model: new UserErrorModel({
+                            msg: e.toString()
+                        })
+                    })
+                }
             });
         }
         , _initMap : function() {
@@ -42,7 +57,7 @@ define('views/map', [
                     );
                   } catch (e) {
                     new UserErrorView({model: new UserErrorModel({
-                        message: 'Leaflet reports bad data in map.json file. ' + e.toString()
+                        msg: 'Leaflet reports bad data in map.json file. ' + e.toString()
                     })});
                   }
                 }
@@ -56,21 +71,6 @@ define('views/map', [
                     });
                 });
             }
-        }
-        , renewViews : function() {
-            var that = this;
-            that.markerViews = _.map(that.issue.get('collection').models, function(article) {
-                if (!article.markerView) {
-                    article.markerView = new MarkerView({
-                          model     : article
-                        , map       : that.map
-                        , mapconfig : that.mapconfig
-                    });
-                }
-                return article.markerView;
-            });
-            _.forEach(that.markerViews, function(mv) { mv.render(); });
-            that.trigger('markers', that.markerViews);
         }
         , render: function() {
             var that = this;

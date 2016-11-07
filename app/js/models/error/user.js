@@ -8,7 +8,7 @@ define('models/error/user', [
             "msg" : ""
         },
         initialize: function(args) {
-            this.set('msg', args.message);
+            this.set('msg', args.msg);
         }
     });
     return UserErrorModel;
